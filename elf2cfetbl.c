@@ -2310,7 +2310,7 @@ int32 OutputDataToTargetFile()
 
     /* Create the standard header */
     FileHeader.ContentType = 0x63464531;
-    FileHeader.SubType = CFE_FS_TBL_IMG_SUBTYPE;
+    FileHeader.SubType = CFE_FS_SubType_TBL_IMG;
     FileHeader.Length = sizeof(CFE_FS_Header_t);
 
     if (ScIDSpecified == TRUE)
