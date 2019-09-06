@@ -104,24 +104,24 @@ char TableName[38]={""};
 char Description[32]={""};
 char LineOfText[300]={""};
 
-boolean Verbose=FALSE;
-boolean ReportVersion=FALSE;
-boolean OutputHelp=FALSE;
-boolean ByteSwapRequired=FALSE;
-boolean ScIDSpecified=FALSE;
-boolean ProcIDSpecified=FALSE;
-boolean AppIDSpecified=FALSE;
-boolean ScEpochSpecified=FALSE;
-boolean FileEpochSpecified=FALSE;
-boolean TableNameOverride=FALSE;
-boolean DescriptionOverride=FALSE;
-boolean ThisMachineIsLittleEndian=TRUE;
-boolean TargetMachineIsLittleEndian=TRUE;
-boolean ByteAlignFileHeaders=TRUE;
-boolean EnableTimeTagInHeader=FALSE;
-boolean TargetWordsizeIs32Bit=TRUE;
+bool Verbose=false;
+bool ReportVersion=false;
+bool OutputHelp=false;
+bool ByteSwapRequired=false;
+bool ScIDSpecified=false;
+bool ProcIDSpecified=false;
+bool AppIDSpecified=false;
+bool ScEpochSpecified=false;
+bool FileEpochSpecified=false;
+bool TableNameOverride=false;
+bool DescriptionOverride=false;
+bool ThisMachineIsLittleEndian=true;
+bool TargetMachineIsLittleEndian=true;
+bool ByteAlignFileHeaders=true;
+bool EnableTimeTagInHeader=false;
+bool TargetWordsizeIs32Bit=true;
 
-boolean TableDataIsAllZeros=FALSE;
+bool TableDataIsAllZeros=false;
 
 FILE *SrcFileDesc;
 FILE *DstFileDesc;
@@ -913,8 +913,8 @@ void FreeMemoryAllocations(void)
 int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 {
     int32      Status = SUCCESS;
-    boolean    InputFileSpecified = FALSE;
-    boolean    OutputFileSpecified = FALSE;
+    bool       InputFileSpecified = false;
+    bool       OutputFileSpecified = false;
     int16      i=1;
     char      *EndPtr;
     uint32     MaxDay;
@@ -929,25 +929,25 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         {
             // Extract the Table Name Override
             strncpy(TableName, &Arguments[i][2], 38);
-            TableNameOverride = TRUE;
+            TableNameOverride = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'd'))
         {
             // Extract the Description Override
             strncpy(Description, &Arguments[i][2], 32);
-            DescriptionOverride = TRUE;
+            DescriptionOverride = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 's'))
         {
             SpacecraftID = strtoul(&Arguments[i][2], &EndPtr, 0);
             if (EndPtr != &Arguments[i][2])
             {
-                ScIDSpecified = TRUE;
+                ScIDSpecified = true;
             }
             else
             {
                 printf("Error!, Spacecraft ID of '%s' cannot be interpreted as an integer.\n", &Arguments[i][2]);
-                Status = FALSE;
+                Status = false;
             }
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'S'))
@@ -956,12 +956,12 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
             {
                 SpacecraftID = U32FROM4CHARS(Arguments[i][2],Arguments[i][3],
                                              Arguments[i][4],Arguments[i][5]);
-                ScIDSpecified = TRUE;
+                ScIDSpecified = true;
             }
             else
             {
                 printf("Error!, Spacecraft ID of '%s' does not have exactly 4 characters.\n", &Arguments[i][2]);
-                Status = FALSE;
+                Status = false;
             }
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'a'))
@@ -969,26 +969,26 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
             ApplicationID = strtoul(&Arguments[i][2], &EndPtr, 0);
             if (EndPtr != &Arguments[i][2])
             {
-                AppIDSpecified = TRUE;
+                AppIDSpecified = true;
             }
             else
             {
                 printf("Error!, Application ID of '%s' cannot be interpreted as an integer.\n", &Arguments[i][2]);
-                Status = FALSE;
+                Status = false;
             }
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'p'))
         {
-            ProcIDSpecified = TRUE;
+            ProcIDSpecified = true;
             ProcessorID = strtoul(&Arguments[i][2], &EndPtr, 0);
             if (EndPtr != &Arguments[i][2])
             {
-                ProcIDSpecified = TRUE;
+                ProcIDSpecified = true;
             }
             else
             {
                 printf("Error!, Processor ID of '%s' cannot be interpreted as an integer.\n", &Arguments[i][2]);
-                Status = FALSE;
+                Status = false;
             }
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'P'))
@@ -997,33 +997,33 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
             {
                 ProcessorID = U32FROM4CHARS(Arguments[i][2],Arguments[i][3],
                                             Arguments[i][4],Arguments[i][5]);
-                ProcIDSpecified = TRUE;
+                ProcIDSpecified = true;
             }
             else
             {
                 printf("Error!, Processor ID of '%s' does not have exactly 4 characters.\n", &Arguments[i][2]);
-                Status = FALSE;
+                Status = false;
             }
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'h'))
         {
-            OutputHelp = TRUE;
+            OutputHelp = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'v'))
         {
-            Verbose = TRUE;
+            Verbose = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'V'))
         {
-            ReportVersion = TRUE;
+            ReportVersion = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'n'))
         {
-            ByteAlignFileHeaders = FALSE;
+            ByteAlignFileHeaders = false;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'T'))
         {
-            EnableTimeTagInHeader = TRUE;
+            EnableTimeTagInHeader = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'e'))
         {
@@ -1031,7 +1031,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
             if (EndPtr != &Arguments[i][6])
             {
                 fprintf(stderr, "Error! Spacecraft Epoch Year is not of the form 'YYYY:'\n");
-                Status = FALSE;
+                Status = false;
             }
             else
             {
@@ -1039,7 +1039,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                 if ((EndPtr != &Arguments[i][9]) || (ScEpoch.Month == 0) || (ScEpoch.Month > 12))
                 {
                     fprintf(stderr, "Error! Spacecraft Epoch Month is not of the form 'MM:' where MM is in the range of 1-12\n");
-                    Status = FALSE;
+                    Status = false;
                 }
                 else
                 {
@@ -1078,7 +1078,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                         (ScEpoch.Day == 0) || (ScEpoch.Day > MaxDay))
                     {
                         fprintf(stderr, "Error! Spacecraft Epoch Day is not of the form 'DD:' where DD is in the range of 1-%d\n", MaxDay);
-                        Status = FALSE;
+                        Status = false;
                     }
                     else
                     {
@@ -1086,7 +1086,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                         if ((EndPtr != &Arguments[i][15]) || (ScEpoch.Hour > 23))
                         {
                             fprintf(stderr, "Error! Spacecraft Epoch Hour is not of the form 'hh:' where hh is in the range of 0-23\n");
-                            Status = FALSE;
+                            Status = false;
                         }
                         else
                         {
@@ -1094,7 +1094,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                             if ((EndPtr != &Arguments[i][18]) || (ScEpoch.Minute > 59))
                             {
                                 fprintf(stderr, "Error! Spacecraft Epoch Minute is not of the form 'mm:' where mm is in the range of 0-59\n");
-                                Status = FALSE;
+                                Status = false;
                             }
                             else
                             {
@@ -1102,11 +1102,11 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                                 if ((EndPtr != &Arguments[i][21]) || (ScEpoch.Second > 59))
                                 {
                                     fprintf(stderr, "Error! Spacecraft Epoch Second is not of the form 'ss' where ss is in the range of 0-59\n");
-                                    Status = FALSE;
+                                    Status = false;
                                 }
                                 else
                                 {
-                                    ScEpochSpecified = TRUE;
+                                    ScEpochSpecified = true;
                                 }
                             }
                         }
@@ -1120,7 +1120,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
             if (EndPtr != &Arguments[i][6])
             {
                 fprintf(stderr, "Error! File Epoch Year is not of the form 'YYYY:'\n");
-                Status = FALSE;
+                Status = false;
             }
             else
             {
@@ -1128,7 +1128,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                 if ((EndPtr != &Arguments[i][9]) || (FileEpoch.Month == 0) || (FileEpoch.Month > 12))
                 {
                     fprintf(stderr, "Error! File Epoch Month is not of the form 'MM:' where MM is in the range of 1-12\n");
-                    Status = FALSE;
+                    Status = false;
                 }
                 else
                 {
@@ -1166,7 +1166,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                     if ((EndPtr != &Arguments[i][12]) || (FileEpoch.Day == 0) || (FileEpoch.Day > MaxDay))
                     {
                         fprintf(stderr, "Error! File Epoch Day is not of the form 'DD:' where DD is in the range of 1-%d\n", MaxDay);
-                        Status = FALSE;
+                        Status = false;
                     }
                     else
                     {
@@ -1174,7 +1174,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                         if ((EndPtr != &Arguments[i][15]) || (FileEpoch.Hour > 23))
                         {
                             fprintf(stderr, "Error! File Epoch Hour is not of the form 'hh:' where hh is in the range of 0-23\n");
-                            Status = FALSE;
+                            Status = false;
                         }
                         else
                         {
@@ -1182,7 +1182,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                             if ((EndPtr != &Arguments[i][18]) || (FileEpoch.Minute > 59))
                             {
                                 fprintf(stderr, "Error! File Epoch Minute is not of the form 'mm:' where mm is in the range of 0-59\n");
-                                Status = FALSE;
+                                Status = false;
                             }
                             else
                             {
@@ -1190,11 +1190,11 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
                                 if ((EndPtr != &Arguments[i][21]) || (FileEpoch.Second > 59))
                                 {
                                     fprintf(stderr, "Error! File Epoch Second is not of the form 'ss' where ss is in the range of 0-59\n");
-                                    Status = FALSE;
+                                    Status = false;
                                 }
                                 else
                                 {
-                                    FileEpochSpecified = TRUE;
+                                    FileEpochSpecified = true;
                                 }
                             }
                         }
@@ -1205,12 +1205,12 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         else if (!InputFileSpecified)
         {
             strncpy(SrcFilename, Arguments[i], OS_MAX_FILE_NAME);
-            InputFileSpecified = TRUE;
+            InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
             strncpy(DstFilename, Arguments[i], OS_MAX_FILE_NAME);
-            OutputFileSpecified = TRUE;
+            OutputFileSpecified = true;
         }
         else
         {
@@ -1321,7 +1321,7 @@ int32 GetSrcFilename(void)
 
     if (strlen(SrcFilename) == 0)
     {
-        OutputHelp = TRUE;
+        OutputHelp = true;
         Status = FAILED;
     }
 
@@ -1403,7 +1403,7 @@ int32 GetElfHeader(void)
 
     if (((char *)&EndiannessCheck)[0] == 0x01)
     {
-        ThisMachineIsLittleEndian = FALSE;
+        ThisMachineIsLittleEndian = false;
     }
     else if (((char *)&EndiannessCheck)[0] != 0x04)
     {
@@ -1453,13 +1453,13 @@ int32 GetElfHeader(void)
         case ELFCLASS32:
             sprintf(VerboseStr, "ELFCLASS32 (1)");
             if (Verbose) printf("Target table is 32 bit\n");
-            TargetWordsizeIs32Bit = TRUE;
+            TargetWordsizeIs32Bit = true;
             break;
 
         case ELFCLASS64:
             sprintf(VerboseStr, "ELFCLASS64 (2)");
             if (Verbose) printf("Target table is 64 bit\n");
-            TargetWordsizeIs32Bit = FALSE;
+            TargetWordsizeIs32Bit = false;
             break;
 
         default:
@@ -1487,19 +1487,19 @@ int32 GetElfHeader(void)
 
         case ELFDATA2LSB:
             sprintf(VerboseStr, "ELFDATA2LSB (Little-Endian)");
-            TargetMachineIsLittleEndian = TRUE;
-            if (ThisMachineIsLittleEndian == FALSE)
+            TargetMachineIsLittleEndian = true;
+            if (ThisMachineIsLittleEndian == false)
             {
-                ByteSwapRequired = TRUE;
+                ByteSwapRequired = true;
             }
             break;
 
         case ELFDATA2MSB:
             sprintf(VerboseStr, "ELFDATA2MSB (Big-Endian)");
-            TargetMachineIsLittleEndian = FALSE;
-            if (ThisMachineIsLittleEndian == TRUE)
+            TargetMachineIsLittleEndian = false;
+            if (ThisMachineIsLittleEndian == true)
             {
-                ByteSwapRequired = TRUE;
+                ByteSwapRequired = true;
             }
             break;
 
@@ -1542,7 +1542,7 @@ int32 GetElfHeader(void)
         return FAILED;
     }
 
-    if (ByteSwapRequired == TRUE)
+    if (ByteSwapRequired == true)
     {
         SwapElfHeader();
     }
@@ -1639,7 +1639,7 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
         return FAILED;
     }
 
-    if (ByteSwapRequired == TRUE) SwapSectionHeader(SectionHeader);
+    if (ByteSwapRequired == true) SwapSectionHeader(SectionHeader);
 
     if ((SectionHeaderStringTableDataOffset != 0) && (get_sh_name(SectionHeader) != 0))
     {
@@ -2132,13 +2132,13 @@ int32 GetTblDefInfo(void)
             printf("Table Defined as follows:\n");
             printf("   Data Object: %s\n", TblFileDef.ObjectName);
             printf("   Table Name : '%s'", TblFileDef.TableName);
-            if (TableNameOverride == TRUE)
+            if (TableNameOverride == true)
             {
                 printf(" overridden with : '%s'", TableName);
             }
             printf("\n");
             printf("   Description: '%s'", TblFileDef.Description);
-            if (DescriptionOverride == TRUE)
+            if (DescriptionOverride == true)
             {
                 printf(" overridden with : '%s'", Description);
             }
@@ -2224,7 +2224,7 @@ int32 LocateAndReadUserObject(void)
         if (strcmp(SectionNamePtrs[get_st_shndx(SymbolPtrs[UserObjSymbolIndex])], ".bss") == 0)
         {
             if (Verbose) printf("Table contents are in '.bss' section and are assumed to be all zeros.\n");
-            TableDataIsAllZeros = TRUE;
+            TableDataIsAllZeros = true;
 
             if (Verbose)
             {
@@ -2310,10 +2310,10 @@ int32 OutputDataToTargetFile()
 
     /* Create the standard header */
     FileHeader.ContentType = 0x63464531;
-    FileHeader.SubType = CFE_FS_TBL_IMG_SUBTYPE;
+    FileHeader.SubType = CFE_FS_SubType_TBL_IMG;
     FileHeader.Length = sizeof(CFE_FS_Header_t);
 
-    if (ScIDSpecified == TRUE)
+    if (ScIDSpecified == true)
     {
         FileHeader.SpacecraftID = SpacecraftID;
     }
@@ -2322,7 +2322,7 @@ int32 OutputDataToTargetFile()
         FileHeader.SpacecraftID = 0;
     }
 
-    if (ProcIDSpecified == TRUE)
+    if (ProcIDSpecified == true)
     {
         FileHeader.ProcessorID = ProcessorID;
     }
@@ -2331,7 +2331,7 @@ int32 OutputDataToTargetFile()
         FileHeader.ProcessorID = 0;
     }
 
-    if (AppIDSpecified == TRUE)
+    if (AppIDSpecified == true)
     {
         FileHeader.ApplicationID = ApplicationID;
     }
@@ -2353,7 +2353,7 @@ int32 OutputDataToTargetFile()
 
     memset(FileHeader.Description, 0, CFE_FS_HDR_DESC_MAX_LEN);
 
-    if (DescriptionOverride == TRUE)
+    if (DescriptionOverride == true)
     {
         strcpy(FileHeader.Description, Description);
     }
@@ -2363,7 +2363,7 @@ int32 OutputDataToTargetFile()
     }
 
     /* If this machine is little endian, the CFE header must be swapped */
-    if (ThisMachineIsLittleEndian == TRUE)
+    if (ThisMachineIsLittleEndian == true)
     {
         if (Verbose) printf("\ncFE Headers are being byte-swapped because this machine is 'Little Endian'\n");
         SwapUInt32(&FileHeader.ContentType);
@@ -2386,7 +2386,7 @@ int32 OutputDataToTargetFile()
         Status = FAILED;
     }
 
-    if (TableNameOverride == TRUE)
+    if (TableNameOverride == true)
     {
         strcpy(TableHeader.TableName, TableName);
     }
@@ -2396,7 +2396,7 @@ int32 OutputDataToTargetFile()
     }
 
     /* If this machine is little endian, the TBL header must be swapped */
-    if (ThisMachineIsLittleEndian == TRUE)
+    if (ThisMachineIsLittleEndian == true)
     {
         SwapUInt32(&TableHeader.Reserved);
         SwapUInt32(&TableHeader.Offset);
