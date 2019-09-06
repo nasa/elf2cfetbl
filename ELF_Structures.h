@@ -19,16 +19,26 @@
 **      limitations under the License.
 **
 */
-typedef void *             Elf32_Addr;
-typedef unsigned short int Elf32_Half;
-typedef unsigned int       Elf32_Off;
-typedef signed int         Elf32_Sword;
-typedef unsigned int       Elf32_Word;
+#include <stdint.h>
+
+typedef uint32_t           Elf32_Addr;
+typedef uint16_t           Elf32_Half;
+typedef uint32_t           Elf32_Off;
+typedef int32_t            Elf32_Sword;
+typedef uint32_t           Elf32_Word;
+
+typedef uint64_t           Elf64_Addr;
+typedef uint64_t           Elf64_Off;
+typedef uint16_t           Elf64_Half;
+typedef uint32_t           Elf64_Word;
+typedef int32_t            Elf64_Sword;
+typedef uint64_t           Elf64_Xword;
+typedef int64_t            Elf64_Sxword;
 
 #define EI_NIDENT 16 /**< \brief Size of e_ident[]       */
 
-/** 
-*    Elf Header Format
+/**
+*    Elf 32 bit Header Format
 */
 typedef struct {
     unsigned char e_ident [EI_NIDENT] ;  /**< \brief Machine independent data to allow decoding of file */
@@ -46,6 +56,31 @@ typedef struct {
     Elf32_Half    e_shnum;               /**< \brief Number of entries the Section Header Table contains */
     Elf32_Half    e_shstrndx;            /**< \brief Section Header Table index for the Section Name String Table */
 } Elf32_Ehdr;
+
+/**
+*    Elf 64 bit Header Format
+*/
+typedef struct {
+    unsigned char   e_ident[EI_NIDENT];  /**< \brief Machine independent data to allow decoding of file */
+    Elf64_Half      e_type;              /**< \brief Identifies object file type */
+    Elf64_Half      e_machine;           /**< \brief Specifies required architecture for file */
+    Elf64_Word      e_version;           /**< \brief Object file version */
+    Elf64_Addr      e_entry;             /**< \brief Virtual start address for process */
+    Elf64_Off       e_phoff;             /**< \brief File offset to beginning of Program Header Table */
+    Elf64_Off       e_shoff;             /**< \brief File offset to beginning of Section Header Table */
+    Elf64_Word      e_flags;             /**< \brief Processor specific flags */
+    Elf64_Half      e_ehsize;            /**< \brief ELF Header's size, in bytes */
+    Elf64_Half      e_phentsize;         /**< \brief Size, in bytes, of each Program Header Table Entry */
+    Elf64_Half      e_phnum;             /**< \brief Number of entries the Program Header Table contains */
+    Elf64_Half      e_shentsize;         /**< \brief Size, in bytes, of each Section Header Table Entry */
+    Elf64_Half      e_shnum;             /**< \brief Number of entries the Section Header Table contains */
+    Elf64_Half      e_shstrndx;          /**< \brief Section Header Table index for the Section Name String Table */
+} Elf64_Ehdr;
+
+union Elf_Ehdr {
+    Elf32_Ehdr Ehdr32;
+    Elf64_Ehdr Ehdr64;
+};
 
 /**
 *    e_type values are as follows:
@@ -78,6 +113,8 @@ typedef struct {
 #define EM_960         19 /**< \brief Intel 80960                                                     */
 #define EM_PPC         20 /**< \brief PowerPC                                                         */
 #define EM_PPC64       21 /**< \brief 64-bit PowerPC                                                  */
+#define EM_S390        22 /**< \brief IBM System/390 Processor                                        */
+#define EM_SPU         23 /**< \brief IBM SPU/SPC                                                     */
 #define EM_V800        36 /**< \brief NEC V800                                                        */
 #define EM_FR20        37 /**< \brief Fujitsu FR20                                                    */
 #define EM_RH32        38 /**< \brief TRW RH-32                                                       */
@@ -104,6 +141,10 @@ typedef struct {
 #define EM_ME16        59 /**< \brief Toyota ME16 processor                                           */
 #define EM_ST100       60 /**< \brief STMicroelectronics ST100 processor                              */
 #define EM_TINYJ       61 /**< \brief Advanced Logic Corp. TinyJ embedded processor family            */
+#define EM_X86_64      62 /**< \brief AMD x86-64 architecture                                         */
+#define EM_PDSP        63 /**< \brief Sony DSP Processor                                              */
+#define EM_PDP10       64 /**< \brief Digital Equipment Corp. PDP-10                                  */
+#define EM_PDP11       65 /**< \brief Digital Equipment Corp. PDP-11                                  */
 #define EM_FX66        66 /**< \brief Siemens FX66 microcontroller                                    */
 #define EM_ST9PLUS     67 /**< \brief STMicroelectronics ST9+ 8/16 bit microcontroller                */
 #define EM_ST7         68 /**< \brief STMicroelectronics ST7 8-bit microcontroller                    */
@@ -121,19 +162,136 @@ typedef struct {
 #define EM_MMIX        80 /**< \brief Donald Knuth's educational 64-bit processor                     */
 #define EM_HUANY       81 /**< \brief Harvard University machine-independent object files             */
 #define EM_PRISM       82 /**< \brief SiTera Prism                                                    */
-                                                                                                      
-/**                                                                                                   
-*    e_version values are as follows:                                                                 
-*/                                                                                                    
-#define EV_NONE    0 /**< \brief version         */                                                   
-#define EV_CURRENT 1 /**< \brief Current version */                                                   
-                                                                                                      
-/**                                                                                                   
-*    e_ident[] index values are as follows:                                                           
-*/                                                                                                    
-#define EI_MAG0    0 /**< \brief File identification     */                                           
-#define EI_MAG1    1 /**< \brief File identification     */                                           
-#define EI_MAG2    2 /**< \brief File identification     */                                           
+#define EM_AVR         83 /**< \brief Atmel AVR 8-bit microcontroller                                 */
+#define EM_FR30        84 /**< \brief Fujitsu FR30                                                    */
+#define EM_D10V        85 /**< \brief Mitsubishi D10V                                                 */
+#define EM_D30V        86 /**< \brief Mitsubishi D30V                                                 */
+#define EM_V850        87 /**< \brief NEC v850                                                        */
+#define EM_M32R        88 /**< \brief Mitsubishi M32R                                                 */
+#define EM_MN10300     89 /**< \brief Matsushita MN10300                                              */
+#define EM_MN10200     90 /**< \brief Matsushita MN10200                                              */
+#define EM_PJ          91 /**< \brief picoJava                                                        */
+#define EM_OPENRISC    92 /**< \brief OpenRISC 32-bit embedded processor                              */
+#define EM_ARC_COMPACT 93 /**< \brief ARC International ARCompact processor (old spelling/synonym: EM_ARC_A5) */
+#define EM_XTENSA      94 /**< \brief Tensilica Xtensa Architecture                                   */
+#define EM_VIDEOCORE   95 /**< \brief Alphamosaic VideoCore processor                                 */
+#define EM_TMM_GPP     96 /**< \brief Thompson Multimedia General Purpose Processor                   */
+#define EM_NS32K       97 /**< \brief National Semiconductor 32000 series                             */
+#define EM_TPC         98 /**< \brief Tenor Network TPC processor                                     */
+#define EM_SNP1K       99 /**< \brief Trebia SNP 1000 processor                                       */
+#define EM_ST200      100 /**< \brief STMicroelectronics (www.st.com) ST200 microcontroller           */
+#define EM_IP2K       101 /**< \brief Ubicom IP2xxx microcontroller family                            */
+#define EM_MAX        102 /**< \brief MAX Processor                                                   */
+#define EM_CR         103 /**< \brief National Semiconductor CompactRISC microprocessor               */
+#define EM_F2MC16     104 /**< \brief Fujitsu F2MC16                                                  */
+#define EM_MSP430     105 /**< \brief Texas Instruments embedded microcontroller msp430               */
+#define EM_BLACKFIN   106 /**< \brief Analog Devices Blackfin (DSP) processor                         */
+#define EM_SE_C33     107 /**< \brief S1C33 Family of Seiko Epson processors                          */
+#define EM_SEP        108 /**< \brief Sharp embedded microprocessor                                   */
+#define EM_ARCA       109 /**< \brief Arca RISC Microprocessor                                        */
+#define EM_UNICORE    110 /**< \brief Microprocessor series from PKU-Unity Ltd. and MPRC of Peking University */
+#define EM_EXCESS     111 /**< \brief eXcess: 16/32/64-bit configurable embedded CPU                  */
+#define EM_DXP        112 /**< \brief Icera Semiconductor Inc. Deep Execution Processor               */
+#define EM_ALTERA_NIOS2 113 /**< \brief Altera Nios II soft-core processor                            */
+#define EM_CRX        114 /**< \brief National Semiconductor CompactRISC CRX microprocessor           */
+#define EM_XGATE      115 /**< \brief Motorola XGATE embedded processor                               */
+#define EM_C166       116 /**< \brief Infineon C16x/XC16x processor                                   */
+#define EM_M16C       117 /**< \brief Renesas M16C series microprocessors                             */
+#define EM_DSPIC30F   118 /**< \brief Microchip Technology dsPIC30F Digital Signal Controller         */
+#define EM_CE         119 /**< \brief Freescale Communication Engine RISC core                        */
+#define EM_M32C       120 /**< \brief Renesas M32C series microprocessors                             */
+#define EM_TSK3000    131 /**< \brief Altium TSK3000 core                                             */
+#define EM_RS08       132 /**< \brief Freescale RS08 embedded processor                               */
+#define EM_SHARC      133 /**< \brief Analog Devices SHARC family of 32-bit DSP processors            */
+#define EM_ECOG2      134 /**< \brief Cyan Technology eCOG2 microprocessor                            */
+#define EM_SCORE7     135 /**< \brief Sunplus S+core7 RISC processor                                  */
+#define EM_DSP24      136 /**< \brief New Japan Radio (NJR) 24-bit DSP Processor                      */
+#define EM_VIDEOCORE3 137 /**< \brief Broadcom VideoCore III processor                                */
+#define EM_LATTICEMICO32 138 /**< \brief RISC processor for Lattice FPGA architecture                 */
+#define EM_SE_C17     139 /**< \brief Seiko Epson C17 family                                          */
+#define EM_TI_C6000   140 /**< \brief The Texas Instruments TMS320C6000 DSP family                    */
+#define EM_TI_C2000   141 /**< \brief The Texas Instruments TMS320C2000 DSP family                    */
+#define EM_TI_C5500   142 /**< \brief The Texas Instruments TMS320C55x DSP family                     */
+#define EM_TI_ARP32   143 /**< \brief Texas Instruments Application Specific RISC Processor, 32bit fetch */
+#define EM_TI_PRU     144 /**< \brief Texas Instruments Programmable Realtime Unit                    */
+#define EM_MMDSP_PLUS 160 /**< \brief EM_MMDSP_PLUS 160 STMicroelectronics 64bit VLIW Data Signal Processor */
+#define EM_CYPRESS_M8C 161 /**< \brief Cypress M8C microprocessor                                     */
+#define EM_R32C       162 /**< \brief Renesas R32C series microprocessors                             */
+#define EM_TRIMEDIA   163 /**< \brief NXP Semiconductors TriMedia architecture family                 */
+#define EM_QDSP6      164 /**< \brief QUALCOMM DSP6 Processor                                         */
+#define EM_8051       165 /**< \brief Intel 8051 and variants                                         */
+#define EM_STXP7X     166 /**< \brief STMicroelectronics STxP7x family of configurable and extensible RISC processors */
+#define EM_NDS32      167 /**< \brief Andes Technology compact code size embedded RISC processor family */
+#define EM_ECOG1      168 /**< \brief Cyan Technology eCOG1X family                                   */
+#define EM_ECOG1X     168 /**< \brief Cyan Technology eCOG1X family                                   */
+#define EM_MAXQ30     169 /**< \brief Dallas Semiconductor MAXQ30 Core Micro-controllers              */
+#define EM_XIMO16     170 /**< \brief New Japan Radio (NJR) 16-bit DSP Processor                      */
+#define EM_MANIK      171 /**< \brief M2000 Reconfigurable RISC Microprocessor                        */
+#define EM_RX         173 /**< \brief Renesas RX family                                               */
+#define EM_METAG      174 /**< \brief Imagination Technologies META processor architecture            */
+#define EM_MCST_ELBRUS 175 /**< \brief MCST Elbrus general purpose hardware architecture              */
+#define EM_ECOG16     176 /**< \brief Cyan Technology eCOG16 family                                   */
+#define EM_CR16       177 /**< \brief National Semiconductor CompactRISC CR16 16-bit microprocessor   */
+#define EM_ETPU       178 /**< \brief Freescale Extended Time Processing Unit                         */
+#define EM_SLE9X      179 /**< \brief Infineon Technologies SLE9X core                                */
+#define EM_L10M       180 /**< \brief Intel L10M                                                      */
+#define EM_K10M       181 /**< \brief Intel K10M                                                      */
+#define EM_AARCH64    183 /**< \brief ARM 64-bit architecture (AARCH64)                               */
+#define EM_AVR32      185 /**< \brief Atmel Corporation 32-bit microprocessor family                  */
+#define EM_STM8       186 /**< \brief STMicroeletronics STM8 8-bit microcontroller                    */
+#define EM_TILE64     187 /**< \brief Tilera TILE64 multicore architecture family                     */
+#define EM_TILEPRO    188 /**< \brief Tilera TILEPro multicore architecture family                    */
+#define EM_MICROBLAZE 189 /**< \brief Xilinx MicroBlaze 32-bit RISC soft processor core               */
+#define EM_CUDA       190 /**< \brief NVIDIA CUDA architecture                                        */
+#define EM_TILEGX     191 /**< \brief Tilera TILE-Gx multicore architecture family                    */
+#define EM_CLOUDSHIELD 192 /**< \brief CloudShield architecture family                                */
+#define EM_COREA_1ST  193 /**< \brief KIPO-KAIST Core-A 1st generation processor family               */
+#define EM_COREA_2ND  194 /**< \brief KIPO-KAIST Core-A 2nd generation processor family               */
+#define EM_ARC_COMPACT2 195 /**< \brief Synopsys ARCompact V2                                         */
+#define EM_OPEN8      196 /**< \brief Open8 8-bit RISC soft processor core                            */
+#define EM_RL78       197 /**< \brief Renesas RL78 family                                             */
+#define EM_VIDEOCORE5 198 /**< \brief Broadcom VideoCore V processor                                  */
+#define EM_78KOR      199 /**< \brief Renesas 78KOR family                                            */
+#define EM_56800EX    200 /**< \brief Freescale 56800EX Digital Signal Controller (DSC)               */
+#define EM_BA1        201 /**< \brief Beyond BA1 CPU architecture                                     */
+#define EM_BA2        202 /**< \brief Beyond BA2 CPU architecture                                     */
+#define EM_XCORE      203 /**< \brief XMOS xCORE processor family                                     */
+#define EM_MCHP_PIC   204 /**< \brief Microchip 8-bit PIC(r) family                                   */
+#define EM_INTEL205   205 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL206   206 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL207   207 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL208   208 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL209   209 /**< \brief Reserved by Intel                                               */
+#define EM_KM32       210 /**< \brief KM211 KM32 32-bit processor                                     */
+#define EM_KMX32      211 /**< \brief KM211 KMX32 32-bit processor                                    */
+#define EM_KMX16      212 /**< \brief KM211 KMX16 16-bit processor                                    */
+#define EM_KMX8       213 /**< \brief KM211 KMX8 8-bit processor                                      */
+#define EM_KVARC      214 /**< \brief KM211 KVARC processor                                           */
+#define EM_CDP        215 /**< \brief Paneve CDP architecture family                                  */
+#define EM_COGE       216 /**< \brief Cognitive Smart Memory Processor                                */
+#define EM_COOL       217 /**< \brief Bluechip Systems CoolEngine                                     */
+#define EM_NORC       218 /**< \brief Nanoradio Optimized RISC                                        */
+#define EM_CSR_KALIMBA 219 /**< \brief CSR Kalimba architecture family                                */
+#define EM_Z80        220 /**< \brief Zilog Z80                                                       */
+#define EM_VISIUM     221 /**< \brief Controls and Data Services VISIUMcore processor                 */
+#define EM_FT32       222 /**< \brief FTDI Chip FT32 high performance 32-bit RISC architecture        */
+#define EM_MOXIE      223 /**< \brief Moxie processor family                                          */
+#define EM_AMDGPU     224 /**< \brief AMD GPU architecture                                            */
+#define EM_RISCV      243 /**< \brief RISC-VEM_FR30 84 Fujitsu FR30                                   */
+
+
+/**
+*    e_version values are as follows:
+*/
+#define EV_NONE    0 /**< \brief version         */
+#define EV_CURRENT 1 /**< \brief Current version */
+
+/**
+*    e_ident[] index values are as follows:
+*/
+#define EI_MAG0    0 /**< \brief File identification     */
+#define EI_MAG1    1 /**< \brief File identification     */
+#define EI_MAG2    2 /**< \brief File identification     */
 #define EI_MAG3    3 /**< \brief File identification     */
 #define EI_CLASS   4 /**< \brief File class              */
 #define EI_DATA    5 /**< \brief Data encoding           */
@@ -177,9 +335,10 @@ typedef struct {
 
 
 /**
-*    Section Header Format
+*    32 bit Section Header Format
 */
-typedef struct {
+typedef struct
+{
     Elf32_Word    sh_name;         /**< \brief Index into Section Header String Table giving location of section name */
     Elf32_Word    sh_type;         /**< \brief Section type */
     Elf32_Word    sh_flags;        /**< \brief Section attributes */
@@ -191,6 +350,29 @@ typedef struct {
     Elf32_Word    sh_addralign;    /**< \brief Section memory address alignment constraints */
     Elf32_Word    sh_entsize;      /**< \brief Size of an entry for a Section containing a table of fixed size entries */
 } Elf32_Shdr;
+
+/**
+*    64 bit Section Header Format
+*/
+typedef struct
+{
+    Elf64_Word  sh_name;         /**< \brief Index into Section Header String Table giving location of section name */
+    Elf64_Word  sh_type;         /**< \brief Section type */
+    Elf64_Xword sh_flags;        /**< \brief Section attributes */
+    Elf64_Addr  sh_addr;         /**< \brief Address at which first byte of section should reside */
+    Elf64_Off   sh_offset;       /**< \brief File offset to first byte of Section */
+    Elf64_Xword sh_size;         /**< \brief Section size, in bytes */
+    Elf64_Word  sh_link;         /**< \brief Section Header Table index link (interpretation depends upon Section Type) */
+    Elf64_Word  sh_info;         /**< \brief Extra information (interpretation depends upon Section Type) */
+    Elf64_Xword sh_addralign;    /**< \brief Section memory address alignment constraints */
+    Elf64_Xword sh_entsize;      /**< \brief Size of an entry for a Section containing a table of fixed size entries */
+} Elf64_Shdr;
+
+union Elf_Shdr
+{
+    Elf32_Shdr Shdr32;
+    Elf64_Shdr Shdr64;
+};
 
 /**
 *    sh_type values are as follows:
@@ -234,9 +416,10 @@ typedef struct {
 #define SHF_MASKPROC   0xf0000000  /**< \brief Bits in this mask are reserved for processor specific semantics */
 
 /**
-*    Symbol Table Entry
+*    32 bit Symbol Table Entry
 */
-typedef struct {
+typedef struct
+{
     Elf32_Word    st_name;         /**< \brief String Table Index that gives the symbol name */
     Elf32_Addr    st_value;        /**< \brief Value of associated symbol */
     Elf32_Word    st_size;         /**< \brief Size, in bytes, of symbol */
@@ -244,6 +427,26 @@ typedef struct {
     unsigned char st_other;        /**< \brief  */
     Elf32_Half    st_shndx;        /**< \brief  */
 } Elf32_Sym;
+
+/**
+*    64 bit Symbol Table Entry
+*/
+typedef struct
+{
+    Elf64_Word    st_name;         /**< \brief String Table Index that gives the symbol name */
+    unsigned char st_info;         /**< \brief Symbol's type and binding attributes */
+    unsigned char st_other;        /**< \brief  */
+    Elf64_Half    st_shndx;        /**< \brief  */
+    Elf64_Addr    st_value;        /**< \brief Value of associated symbol */
+    Elf64_Xword   st_size;         /**< \brief Size, in bytes, of symbol */
+} Elf64_Sym;
+
+union Elf_Sym
+{
+    Elf32_Sym Sym32;
+    Elf64_Sym Sym64;
+};
+
 
 #define ELF32_ST_INFO (b,t) (((b) << 4 ) + ((t) & 0xf))
 
@@ -273,4 +476,3 @@ typedef struct {
 
 #define STT_LOPROC  13  /**< \brief Values >= are reserved for processor specific semantics */
 #define STT_HIPROC  15  /**< \brief Values <= are reserved for processor specific semantics */
-
