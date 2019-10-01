@@ -590,7 +590,7 @@ void set_st_size(union Elf_Sym *Symbol, uint64_t new_value)
     {
         Symbol->Sym32.st_size = (uint32_t) new_value;
         if (Symbol->Sym32.st_size != new_value) {
-            printf("ERROR: Sym32.st_size can not hold %ld\n", new_value);
+            printf("ERROR: Sym32.st_size can not hold %lu\n", new_value);
         }
     }
     else
@@ -1680,7 +1680,7 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
                 }
                 SymbolTableEntrySize = get_sh_entsize(SectionHeader);
                 NumSymbols = (get_sh_size(SectionHeader) / get_sh_entsize(SectionHeader)) - 1;
-                sprintf(VerboseStr, "SHT_SYMTAB (2) - # Symbols = %ld", NumSymbols);
+                sprintf(VerboseStr, "SHT_SYMTAB (2) - # Symbols = %lu", NumSymbols);
                 break;
 
             case SHT_STRTAB:
@@ -1779,7 +1779,7 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
     int32 i=0;
     if (SeekOffset != calculated_offset)
     {
-        printf("Error: SeekOffset may not be %ld\n", calculated_offset);
+        printf("Error: SeekOffset may not be %lu\n", calculated_offset);
         Status = FAILED;
     }
     else
@@ -1893,8 +1893,8 @@ void PrintElfHeader32(union Elf_Ehdr ElfHeader)
 {
     if (Verbose) printf("   e_version = %d\n", get_e_version(&ElfHeader));
     if (Verbose) printf("   e_entry = 0x%x\n", ElfHeader.Ehdr32.e_entry);
-    if (Verbose) printf("   e_phoff = 0x%08x (%d)\n", ElfHeader.Ehdr32.e_phoff, ElfHeader.Ehdr32.e_phoff);
-    if (Verbose) printf("   e_shoff = 0x%08x (%d)\n", ElfHeader.Ehdr32.e_shoff, ElfHeader.Ehdr32.e_shoff);
+    if (Verbose) printf("   e_phoff = 0x%08x (%u)\n", ElfHeader.Ehdr32.e_phoff, ElfHeader.Ehdr32.e_phoff);
+    if (Verbose) printf("   e_shoff = 0x%08x (%u)\n", ElfHeader.Ehdr32.e_shoff, ElfHeader.Ehdr32.e_shoff);
     if (Verbose) printf("   e_flags = 0x%08x\n", ElfHeader.Ehdr32.e_flags);
     if (Verbose) printf("   e_ehsize = %d\n", ElfHeader.Ehdr32.e_ehsize);
     if (Verbose) printf("   e_phentsize = %d\n", ElfHeader.Ehdr32.e_phentsize);
@@ -1908,8 +1908,8 @@ void PrintElfHeader64(union Elf_Ehdr ElfHeader)
 {
     if (Verbose) printf("   e_version = %d\n", get_e_version(&ElfHeader));
     if (Verbose) printf("   e_entry = 0x%lx\n", ElfHeader.Ehdr64.e_entry);
-    if (Verbose) printf("   e_phoff = 0x%08lx (%ld)\n", ElfHeader.Ehdr64.e_phoff, ElfHeader.Ehdr64.e_phoff);
-    if (Verbose) printf("   e_shoff = 0x%08lx (%ld)\n", ElfHeader.Ehdr64.e_shoff, ElfHeader.Ehdr64.e_shoff);
+    if (Verbose) printf("   e_phoff = 0x%08lx (%lu)\n", ElfHeader.Ehdr64.e_phoff, ElfHeader.Ehdr64.e_phoff);
+    if (Verbose) printf("   e_shoff = 0x%08lx (%lu)\n", ElfHeader.Ehdr64.e_shoff, ElfHeader.Ehdr64.e_shoff);
     if (Verbose) printf("   e_flags = 0x%08x\n", ElfHeader.Ehdr64.e_flags);
     if (Verbose) printf("   e_ehsize = %d\n", ElfHeader.Ehdr64.e_ehsize);
     if (Verbose) printf("   e_phentsize = %d\n", ElfHeader.Ehdr64.e_phentsize);
@@ -2113,7 +2113,7 @@ int32 GetTblDefInfo(void)
         SeekOffset = (uint32_t) (calculated_offset);
         if (SeekOffset != calculated_offset)
         {
-            printf("Error: SeekOffset may not be %ld\n", calculated_offset);
+            printf("Error: SeekOffset may not be %lu\n", calculated_offset);
             Status = FAILED;
         }
         fseek(SrcFileDesc, SeekOffset, SEEK_SET);
@@ -2203,7 +2203,7 @@ int32 LocateAndReadUserObject(void)
 
     if (Verbose)
     {
-        printf("\ni = %d, NumSymbols = %ld\n", i, NumSymbols);
+        printf("\ni = %d, NumSymbols = %lu\n", i, NumSymbols);
         if (i < NumSymbols)
         {
             printf("\nSymbolName = '%s', ObjectName = '%s'\n",SymbolNames[i], TblFileDef.ObjectName);
@@ -2248,7 +2248,7 @@ int32 LocateAndReadUserObject(void)
             SeekOffset = (uint32_t) (calculated_offset);
             if (SeekOffset != calculated_offset)
             {
-                printf("Error: SeekOffset may not be %ld\n", calculated_offset);
+                printf("Error: SeekOffset may not be %lu\n", calculated_offset);
                 Status = FAILED;
             }
             fseek(SrcFileDesc, SeekOffset, SEEK_SET);
