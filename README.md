@@ -6,8 +6,10 @@ This lab application is a ground utility to convert ELF to cFE binary tables for
 
 See README.txt for more information.
 
-## Release Notes
+## Version Notes
 
+- 3.1.1:
+  - Minor updates (see https://github.com/nasa/elf2cfetbl/pull/19)
 - 3.1.0:
   - Minor updates (see https://github.com/nasa/elf2cfetbl/pull/13)
   - Not backwards compatible with OSAL 4.2.1
