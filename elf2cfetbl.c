@@ -131,7 +131,7 @@ CFE_TBL_File_Hdr_t  TableHeader;
 
 union Elf_Ehdr ElfHeader;
 union Elf_Shdr **SectionHeaderPtrs = NULL;
-union Elf_Shdr SectionHeaderStringTable = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+union Elf_Shdr SectionHeaderStringTable = {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 int64 SectionHeaderStringTableDataOffset = 0;
 char  **SectionNamePtrs = NULL;
 
@@ -1367,11 +1367,18 @@ int32 OpenSrcFile(void)
 
     /* Obtain time of object file's last modification */
     RtnCode = stat(SrcFilename, &SrcFileStats);
+    if (RtnCode == 0)
+    {
+        SrcFileTimeInScEpoch = SrcFileStats.st_mtime + EpochDelta;
 
-    SrcFileTimeInScEpoch = SrcFileStats.st_mtime + EpochDelta;
-
-    if (Verbose) printf("Original Source File Modification Time: %s\n", ctime(&SrcFileStats.st_mtime));
-    if (Verbose) printf("Source File Modification Time in Seconds since S/C Epoch: %ld (0x%08lX)\n", SrcFileTimeInScEpoch, SrcFileTimeInScEpoch);
+        if (Verbose) printf("Original Source File Modification Time: %s\n", ctime(&SrcFileStats.st_mtime));
+        if (Verbose) printf("Source File Modification Time in Seconds since S/C Epoch: %ld (0x%08lX)\n", SrcFileTimeInScEpoch, SrcFileTimeInScEpoch);
+    }
+    else 
+    {
+        if (Verbose) printf("Unable to get modification time from %s", SrcFilename);
+        SrcFileTimeInScEpoch = 0;
+    }
 
     return SUCCESS;
 }
