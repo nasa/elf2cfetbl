@@ -36,10 +36,10 @@
 #include <ctype.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <limits.h>
 #include "ELF_Structures.h"
 #include "cfe_tbl_internal.h"
 #include "cfe_tbl_filedef.h"
-#include "osconfig.h"
 
 #define MAX_SECTION_HDR_NAME_LEN   (128)
 #define TBL_DEF_SYMBOL_NAME "CFE_TBL_FileDef"
@@ -98,8 +98,8 @@ void PrintElfHeader64(union Elf_Ehdr ElfHeader);
 /**
 *    Global Variables
 */
-char SrcFilename[OS_MAX_FILE_NAME+3]={""};
-char DstFilename[OS_MAX_FILE_NAME+3]={""};
+char SrcFilename[PATH_MAX]={""};
+char DstFilename[PATH_MAX]={""};
 char TableName[38]={""};
 char Description[32]={""};
 char LineOfText[300]={""};
@@ -1204,12 +1204,12 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         }
         else if (!InputFileSpecified)
         {
-            strncpy(SrcFilename, Arguments[i], OS_MAX_FILE_NAME);
+            strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
             InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
-            strncpy(DstFilename, Arguments[i], OS_MAX_FILE_NAME);
+            strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
             OutputFileSpecified = true;
         }
         else
