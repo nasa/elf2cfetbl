@@ -123,8 +123,8 @@ bool TargetWordsizeIs32Bit=true;
 
 bool TableDataIsAllZeros=false;
 
-FILE *SrcFileDesc;
-FILE *DstFileDesc;
+FILE *SrcFileDesc = NULL;
+FILE *DstFileDesc = NULL;
 
 CFE_FS_Header_t     FileHeader;
 CFE_TBL_File_Hdr_t  TableHeader;
@@ -902,8 +902,17 @@ void FreeMemoryAllocations(void)
 {
     DeallocateSymbols();
     DeallocateSectionHeaders();
-    fclose(SrcFileDesc);
-    fclose(DstFileDesc);
+
+    if (SrcFileDesc != NULL)
+    {
+        fclose(SrcFileDesc);
+    }
+
+    if (DstFileDesc != NULL)
+    {
+        fclose(DstFileDesc);
+    }
+    
 }
 
 /**
