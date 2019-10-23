@@ -33,13 +33,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <limits.h>
 #include "ELF_Structures.h"
-#include "cfe_tbl_internal.h"
 #include "cfe_tbl_filedef.h"
-#include "osconfig.h"
 
 #define MAX_SECTION_HDR_NAME_LEN   (128)
 #define TBL_DEF_SYMBOL_NAME "CFE_TBL_FileDef"
@@ -98,8 +98,8 @@ void PrintElfHeader64(union Elf_Ehdr ElfHeader);
 /**
 *    Global Variables
 */
-char SrcFilename[OS_MAX_FILE_NAME+3]={""};
-char DstFilename[OS_MAX_FILE_NAME+3]={""};
+char SrcFilename[PATH_MAX]={""};
+char DstFilename[PATH_MAX]={""};
 char TableName[38]={""};
 char Description[32]={""};
 char LineOfText[300]={""};
@@ -117,21 +117,20 @@ bool TableNameOverride=false;
 bool DescriptionOverride=false;
 bool ThisMachineIsLittleEndian=true;
 bool TargetMachineIsLittleEndian=true;
-bool ByteAlignFileHeaders=true;
 bool EnableTimeTagInHeader=false;
 bool TargetWordsizeIs32Bit=true;
 
 bool TableDataIsAllZeros=false;
 
-FILE *SrcFileDesc;
-FILE *DstFileDesc;
+FILE *SrcFileDesc = NULL;
+FILE *DstFileDesc = NULL;
 
 CFE_FS_Header_t     FileHeader;
 CFE_TBL_File_Hdr_t  TableHeader;
 
 union Elf_Ehdr ElfHeader;
 union Elf_Shdr **SectionHeaderPtrs = NULL;
-union Elf_Shdr SectionHeaderStringTable = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+union Elf_Shdr SectionHeaderStringTable = {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 int64 SectionHeaderStringTableDataOffset = 0;
 char  **SectionNamePtrs = NULL;
 
@@ -902,8 +901,17 @@ void FreeMemoryAllocations(void)
 {
     DeallocateSymbols();
     DeallocateSectionHeaders();
-    fclose(SrcFileDesc);
-    fclose(DstFileDesc);
+
+    if (SrcFileDesc != NULL)
+    {
+        fclose(SrcFileDesc);
+    }
+
+    if (DstFileDesc != NULL)
+    {
+        fclose(DstFileDesc);
+    }
+    
 }
 
 /**
@@ -1019,7 +1027,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'n'))
         {
-            ByteAlignFileHeaders = false;
+            /* This option is ignored for compatibility */
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'T'))
         {
@@ -1204,12 +1212,12 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         }
         else if (!InputFileSpecified)
         {
-            strncpy(SrcFilename, Arguments[i], OS_MAX_FILE_NAME);
+            strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
             InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
-            strncpy(DstFilename, Arguments[i], OS_MAX_FILE_NAME);
+            strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
             OutputFileSpecified = true;
         }
         else
@@ -1281,8 +1289,6 @@ void OutputHelpInfo(void)
     printf("                              examples: -PMMS1 or -PQQ#2\n");
     printf("   -a#                   specifies an Application ID to be put into file header.\n");
     printf("                         # can be specified as decimal, octal (starting with a zero), or hex (starting with '0x')\n");
-    printf("   -n                    specifies that output should NOT byte align FS header and secondary table header to nearest\n");
-    printf("                         4-byte boundary. The default assumes a 4-byte alignment on both structures.\n");
     printf("   -T                    enables insertion of the SrcFilename's file creation time into the standard cFE File Header.\n");
     printf("                         This option must be specified for either the '-e' and/or '-f' options below to have any effect.\n");
     printf("                         By default, the time tag fields are set to zero.\n");
@@ -1369,11 +1375,18 @@ int32 OpenSrcFile(void)
 
     /* Obtain time of object file's last modification */
     RtnCode = stat(SrcFilename, &SrcFileStats);
+    if (RtnCode == 0)
+    {
+        SrcFileTimeInScEpoch = SrcFileStats.st_mtime + EpochDelta;
 
-    SrcFileTimeInScEpoch = SrcFileStats.st_mtime + EpochDelta;
-
-    if (Verbose) printf("Original Source File Modification Time: %s\n", ctime(&SrcFileStats.st_mtime));
-    if (Verbose) printf("Source File Modification Time in Seconds since S/C Epoch: %ld (0x%08lX)\n", SrcFileTimeInScEpoch, SrcFileTimeInScEpoch);
+        if (Verbose) printf("Original Source File Modification Time: %s\n", ctime(&SrcFileStats.st_mtime));
+        if (Verbose) printf("Source File Modification Time in Seconds since S/C Epoch: %ld (0x%08lX)\n", SrcFileTimeInScEpoch, SrcFileTimeInScEpoch);
+    }
+    else 
+    {
+        if (Verbose) printf("Unable to get modification time from %s", SrcFilename);
+        SrcFileTimeInScEpoch = 0;
+    }
 
     return SUCCESS;
 }
@@ -2414,30 +2427,12 @@ int32 OutputDataToTargetFile()
     fwrite(&FileHeader.ApplicationID, sizeof(uint32), 1, DstFileDesc);
     fwrite(&FileHeader.TimeSeconds, sizeof(uint32), 1, DstFileDesc);
     fwrite(&FileHeader.TimeSubSeconds, sizeof(uint32), 1, DstFileDesc);
-    fwrite(&FileHeader.Description[0], CFE_FS_HDR_DESC_MAX_LEN, 1, DstFileDesc);
-
-    if ((ByteAlignFileHeaders) && (CFE_FS_HDR_DESC_MAX_LEN%4 != 0))
-    {
-        AByte = 0;
-        for (i=0; i<(4-(CFE_FS_HDR_DESC_MAX_LEN%4)); i++)
-        {
-            fwrite(&AByte, 1, 1, DstFileDesc);
-        }
-    }
+    fwrite(&FileHeader.Description[0], sizeof(FileHeader.Description), 1, DstFileDesc);
 
     fwrite(&TableHeader.Reserved, sizeof(uint32), 1, DstFileDesc);
     fwrite(&TableHeader.Offset, sizeof(uint32), 1, DstFileDesc);
     fwrite(&TableHeader.NumBytes, sizeof(uint32), 1, DstFileDesc);
-    fwrite(&TableHeader.TableName[0], CFE_TBL_MAX_FULL_NAME_LEN, 1, DstFileDesc);
-
-    if ((ByteAlignFileHeaders) && (CFE_TBL_MAX_FULL_NAME_LEN%4 != 0))
-    {
-        AByte = 0;
-        for (i=0; i<(4-(CFE_TBL_MAX_FULL_NAME_LEN%4)); i++)
-        {
-            fwrite(&AByte, 1, 1, DstFileDesc);
-        }
-    }
+    fwrite(&TableHeader.TableName[0], sizeof(TableHeader.TableName), 1, DstFileDesc);
 
     /* Output the data from the object file */
     if (TableDataIsAllZeros)
