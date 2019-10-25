@@ -8,6 +8,8 @@ See README.txt for more information.
 
 ## Version Notes
 
+- 3.1.2:
+  - Minor bug fixes and documentation (see https://github.com/nasa/elf2cfetbl/pull/25)
 - 3.1.1:
   - Minor updates (see https://github.com/nasa/elf2cfetbl/pull/19)
 - 3.1.0:
