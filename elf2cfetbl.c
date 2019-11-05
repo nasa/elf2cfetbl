@@ -37,7 +37,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <sys/stat.h>
-#include <limits.h>
+#include <linux/limits.h>
 #include "ELF_Structures.h"
 #include "cfe_tbl_filedef.h"
 
