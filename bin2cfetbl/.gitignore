@@ -1,0 +1,5 @@
+*.out
+*.script
+*.o.tbl
+sample_table.tbl
+sch_lab_table.tbl

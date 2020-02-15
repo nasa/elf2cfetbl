@@ -1,0 +1,17 @@
+; RUN: %ELF2TBL_EXEC sch_lab_table.c.elf.o -v | %FILECHECK_EXEC %s --strict-whitespace --match-full-lines
+; RUN: diff %S/sch_lab_table.tbl %S/sch_lab_table.expected.tbl
+
+; RUN: python3 %BIN2TBL_EXEC sch_lab_table.c.macho.o sch_lab_table.c.macho.o.tbl | %FILECHECK_EXEC %s --strict-whitespace --match-full-lines
+; RUN: diff sch_lab_table.c.macho.o.tbl %S/sch_lab_table.expected.tbl
+
+; RUN: python3 %BIN2TBL_EXEC sch_lab_table.c.elf.o sch_lab_table.c.elf.o.tbl | %FILECHECK_EXEC %s --strict-whitespace --match-full-lines
+; RUN: diff sch_lab_table.c.elf.o.tbl %S/sch_lab_table.expected.tbl
+
+/// TODO
+; CHECK:Original Source File Modification Time: {{.*$}}
+; CHECK:Table Defined as follows:
+; CHECK:   Data Object: SCH_TBL_Structure
+; CHECK:   Table Name : 'SCH_LAB_APP.SCH_LAB_SchTbl'
+; CHECK:   Description: 'Schedule Lab MsgID Table'
+; CHECK:   Output File: sch_lab_table.tbl
+; CHECK:   Object Size: 320 (0x00000140)

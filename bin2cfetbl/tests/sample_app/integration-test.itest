@@ -1,0 +1,17 @@
+; RUN: %ELF2TBL_EXEC %S/sample_table.c.elf.o -v | %FILECHECK_EXEC %s --strict-whitespace --match-full-lines
+; RUN: diff %S/sample_table.tbl %S/sample_table.expected.tbl
+
+; RUN: python3 %BIN2TBL_EXEC %S/sample_table.c.macho.o %S/sample_table.c.macho.o.tbl | %FILECHECK_EXEC %s --strict-whitespace --match-full-lines
+; RUN: diff %S/sample_table.c.macho.o.tbl %S/sample_table.expected.tbl
+
+; RUN: python3 %BIN2TBL_EXEC %S/sample_table.c.elf.o %S/sample_table.c.elf.o.tbl | %FILECHECK_EXEC %s --strict-whitespace --match-full-lines
+; RUN: diff %S/sample_table.c.elf.o.tbl %S/sample_table.expected.tbl
+
+/// TODO
+; CHECK:Original Source File Modification Time: {{.*$}}
+; CHECK:Table Defined as follows:
+; CHECK:   Data Object: sampleTable
+; CHECK:   Table Name : 'SAMPLE_APP.SampleTable'
+; CHECK:   Description: 'Table Utility Test Table'
+; CHECK:   Output File: sample_table.tbl
+; CHECK:   Object Size: 4 (0x00000004)

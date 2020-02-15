@@ -8,4 +8,4 @@ add_executable(elf2cfetbl elf2cfetbl.c)
 
 install(TARGETS elf2cfetbl DESTINATION host)
 
-
+add_subdirectory(bin2cfetbl)
