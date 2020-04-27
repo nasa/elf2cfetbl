@@ -936,13 +936,15 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         if ((Arguments[i][0] == '-') && (Arguments[i][1] == 't'))
         {
             // Extract the Table Name Override
-            strncpy(TableName, &Arguments[i][2], 38);
+            strncpy(TableName, &Arguments[i][2], sizeof(TableName)-1);
+            TableName[sizeof(TableName)-1] = 0;
             TableNameOverride = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'd'))
         {
             // Extract the Description Override
-            strncpy(Description, &Arguments[i][2], 32);
+            strncpy(Description, &Arguments[i][2], sizeof(Description)-1);
+            Description[sizeof(Description)-1] = 0;
             DescriptionOverride = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 's'))
