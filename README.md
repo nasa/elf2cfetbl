@@ -6,18 +6,31 @@ This lab application is a ground utility to convert ELF to cFE binary tables for
 
 See README.txt for more information.
 
-## Version Notes
+## Version History
 
-- 3.1.2:
-  - Minor bug fixes and documentation (see https://github.com/nasa/elf2cfetbl/pull/25)
-- 3.1.1:
-  - Minor updates (see https://github.com/nasa/elf2cfetbl/pull/19)
-- **3.1.0 OFFICIAL RELEASE**:
-  - Minor updates (see https://github.com/nasa/elf2cfetbl/pull/13)
-  - Not backwards compatible with OSAL 4.2.1
-  - Released as part of cFE 6.7.0, Apache 2.0
-- **3.0a OFFICIAL RELEASE**:
-  - Released as part of cFE 6.6.0a, Apache 2.0
+#### Development Build: 3.1.3
+  
+- Builds for vxworks w/ 32-bit host
+- See https://github.com/nasa/elf2cfetbl/pull/40
+
+#### Development Build: 3.1.2
+  
+- Minor bug fixes and documentation (see https://github.com/nasa/elf2cfetbl/pull/25)
+
+#### Development Build: 3.1.1
+
+- Minor updates (see https://github.com/nasa/elf2cfetbl/pull/19)
+
+
+### ***OFFICIAL RELEASE: 3.1.0***
+
+- Minor updates (see https://github.com/nasa/elf2cfetbl/pull/13)
+- Not backwards compatible with OSAL 4.2.1
+- Released as part of cFE 6.7.0, Apache 2.0
+
+### ***OFFICIAL RELEASE: 3.0a***
+
+- Released as part of cFE 6.6.0a, Apache 2.0
 
 NOTE - there are other parameter set management schemes used with the cFS (JSON, csv, etc) which may be more applicable for modern missions.  Contact the community as detailed below for more information.
 
