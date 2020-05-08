@@ -22,7 +22,7 @@ UTILITY SOURCE FILES:
 CREATING THE UTILITY:
 
    The elf2cfetbl utility and the tables it converts depend on processor
-   specific configuration paramters that are defined in cfe_platform_cfg.h.
+   specific configuration parameters that are defined in cfe_platform_cfg.h.
    Because of this, it is recommended that the elf2cfetbl utility is compiled
    and used for each processor in a cFE/CFS mission directory structure.
    Compiling the utility in this source directory and copying it to a 
