@@ -247,7 +247,7 @@ union Elf_Ehdr {
 #define EM_CLOUDSHIELD 192 /**< \brief CloudShield architecture family                                */
 #define EM_COREA_1ST  193 /**< \brief KIPO-KAIST Core-A 1st generation processor family               */
 #define EM_COREA_2ND  194 /**< \brief KIPO-KAIST Core-A 2nd generation processor family               */
-#define EM_ARC_COMPACT2 195 /**< \brief Synopsys ARCompact V2                                         */
+#define EM_ARC_COMPACT2 195 /**< \brief Synopsis ARCompact V2                                         */
 #define EM_OPEN8      196 /**< \brief Open8 8-bit RISC soft processor core                            */
 #define EM_RL78       197 /**< \brief Renesas RL78 family                                             */
 #define EM_VIDEOCORE5 198 /**< \brief Broadcom VideoCore V processor                                  */
