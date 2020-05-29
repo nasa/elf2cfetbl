@@ -1273,7 +1273,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 void OutputVersionInfo(void)
 {
     printf("\nElf Object File to cFE Table Image File Conversion Tool\n");
-    printf(" Version v3.1.4\n");
+    printf(" Version v3.1.5\n");
     printf(" Built - %s %s\n\n", __DATE__, __TIME__);
 }
 

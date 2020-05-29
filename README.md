@@ -8,6 +8,11 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: 3.1.5
+
+- Apply code style
+- See <https://github.com/nasa/elf2cfetbl/pull/44>
+
 ### Development Build: 3.1.4
 
 - Fix string termination warnings in GCC9
