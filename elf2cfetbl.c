@@ -1227,11 +1227,13 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         else if (!InputFileSpecified)
         {
             strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
+            SrcFilename[PATH_MAX - 1] = '\0';
             InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
             strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
+            DstFilename[PATH_MAX - 1] = '\0';
             OutputFileSpecified = true;
         }
         else
