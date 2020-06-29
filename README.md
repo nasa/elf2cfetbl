@@ -31,7 +31,7 @@ See README.txt for more information.
 
 - Minor updates (see <https://github.com/nasa/elf2cfetbl/pull/19>)
 
-### **_OFFICIAL RELEASE: 3.1.0_**
+### **_OFFICIAL RELEASE: 3.1.0 - Aquila_**
 
 - Minor updates (see <https://github.com/nasa/elf2cfetbl/pull/13>)
 - Not backwards compatible with OSAL 4.2.1
