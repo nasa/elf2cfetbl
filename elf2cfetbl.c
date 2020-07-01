@@ -1227,11 +1227,13 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         else if (!InputFileSpecified)
         {
             strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
+            SrcFilename[PATH_MAX - 1] = '\0';
             InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
             strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
+            DstFilename[PATH_MAX - 1] = '\0';
             OutputFileSpecified = true;
         }
         else
@@ -2246,6 +2248,12 @@ int32 GetTblDefInfo(void)
         }
         fseek(SrcFileDesc, SeekOffset, SEEK_SET);
         NumDefsRead = fread(&TblFileDef, sizeof(CFE_TBL_FileDef_t), 1, SrcFileDesc);
+
+        /* ensuring all are strings are null-terminated */
+        TblFileDef.ObjectName[sizeof(TblFileDef.ObjectName) - 1] = '\0';
+        TblFileDef.TableName[sizeof(TblFileDef.TableName) - 1] = '\0';
+        TblFileDef.Description[sizeof(TblFileDef.Description) - 1] = '\0';
+        TblFileDef.TgtFilename[sizeof(TblFileDef.TgtFilename) - 1] = '\0';
 
         if (NumDefsRead != 1)
         {
