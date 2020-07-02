@@ -664,6 +664,12 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (StringTableDataOffset == 0)
+    {
+        printf("Error! Unable to locate ELF string table for symbol names\n");
+        return EXIT_FAILURE;
+    }
+
     /* Allocate memory for all of the symbol table entries */
     Status = AllocateSymbols();
     if (Status != SUCCESS)
@@ -687,7 +693,7 @@ int main(int argc, char *argv[])
     {
         printf("Error! Unable to locate '%s' object in '%s'.\n", TBL_DEF_SYMBOL_NAME, SrcFilename);
         FreeMemoryAllocations();
-        return Status;
+        return EXIT_FAILURE;
     }
 
     /* Read in the definition of the table file */
@@ -1757,7 +1763,15 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
 
             case SHT_STRTAB:
                 sprintf(VerboseStr, "SHT_STRTAB (3)");
-                if (SectionIndex != get_e_shstrndx(&ElfHeader))
+                /*
+                 * If the section name is ".strtab" then preferentially use this section for symbol name data
+                 * Otherwise use the first section which is NOT the section header string table (.shstrtab)
+                 *
+                 * Not all compilers generate a separate strtab for section header names; some put everything
+                 * into one string table.
+                 */
+                if (strcmp(SectionNamePtrs[SectionIndex],".strtab") == 0 ||
+                        (StringTableDataOffset == 0 && SectionIndex != get_e_shstrndx(&ElfHeader)))
                 {
                     StringTableDataOffset = get_sh_offset(SectionHeader);
                 }
