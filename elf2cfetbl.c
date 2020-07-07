@@ -40,6 +40,7 @@
 #include <limits.h>
 #include "ELF_Structures.h"
 #include "cfe_tbl_filedef.h"
+#include "elf2cfetbl_version.h"
 
 #define MAX_SECTION_HDR_NAME_LEN (128)
 #define TBL_DEF_SYMBOL_NAME      "CFE_TBL_FileDef"
@@ -1281,7 +1282,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 void OutputVersionInfo(void)
 {
     printf("\nElf Object File to cFE Table Image File Conversion Tool\n");
-    printf(" Version v3.1.5\n");
+    printf("Version v%d.%d.%d.%d ", ELF2CFETBL_MAJOR_VERSION, ELF2CFETBL_MINOR_VERSION, ELF2CFETBL_REVISION, ELF2CFETBL_MISSION_REV);
     printf(" Built - %s %s\n\n", __DATE__, __TIME__);
 }
 
