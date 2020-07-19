@@ -1281,9 +1281,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 
 void OutputVersionInfo(void)
 {
-    printf("\nElf Object File to cFE Table Image File Conversion Tool\n");
-    printf("Version v%d.%d.%d.%d ", ELF2CFETBL_MAJOR_VERSION, ELF2CFETBL_MINOR_VERSION, ELF2CFETBL_REVISION, ELF2CFETBL_MISSION_REV);
-    printf(" Built - %s %s\n\n", __DATE__, __TIME__);
+    printf("\n%s\n", ELF2CFETBL_VERSION_STRING);    
 }
 
 /**
@@ -1292,6 +1290,7 @@ void OutputVersionInfo(void)
 
 void OutputHelpInfo(void)
 {
+    printf("\nElf Object File to cFE Table Image File Conversion Tool (elf2cfetbl)\n\n");      
     printf("elf2cfetbl [-tTblName] [-d\"Description\"] [-h] [-v] [-V] [-s#] [-p#] [-n] \n");
     printf("           [-T] [-eYYYY:MM:DD:hh:mm:ss] [-fYYYY:MM:DD:hh:mm:ss] SrcFilename [DestDirectory]\n");
     printf("   where:\n");
