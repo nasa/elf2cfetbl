@@ -31,7 +31,7 @@
 /*
  * Development Build Macro Definitions 
  */
-#define ELF2CFETBL_BUILD_NUMBER 36 /*!< @brief Number of commits since baseline */
+#define ELF2CFETBL_BUILD_NUMBER 39 /*!< @brief Number of commits since baseline */
 #define ELF2CFETBL_BUILD_BASELINE "v3.1.0+dev" /*!< @brief Development Build: git tag that is the base for the current */
 
 /*
