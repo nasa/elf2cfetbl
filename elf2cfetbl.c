@@ -40,6 +40,7 @@
 #include <limits.h>
 #include "ELF_Structures.h"
 #include "cfe_tbl_filedef.h"
+#include "elf2cfetbl_version.h"
 
 #define MAX_SECTION_HDR_NAME_LEN (128)
 #define TBL_DEF_SYMBOL_NAME      "CFE_TBL_FileDef"
@@ -664,6 +665,12 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (StringTableDataOffset == 0)
+    {
+        printf("Error! Unable to locate ELF string table for symbol names\n");
+        return EXIT_FAILURE;
+    }
+
     /* Allocate memory for all of the symbol table entries */
     Status = AllocateSymbols();
     if (Status != SUCCESS)
@@ -687,7 +694,7 @@ int main(int argc, char *argv[])
     {
         printf("Error! Unable to locate '%s' object in '%s'.\n", TBL_DEF_SYMBOL_NAME, SrcFilename);
         FreeMemoryAllocations();
-        return Status;
+        return EXIT_FAILURE;
     }
 
     /* Read in the definition of the table file */
@@ -1227,11 +1234,13 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         else if (!InputFileSpecified)
         {
             strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
+            SrcFilename[PATH_MAX - 1] = '\0';
             InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
             strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
+            DstFilename[PATH_MAX - 1] = '\0';
             OutputFileSpecified = true;
         }
         else
@@ -1272,9 +1281,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 
 void OutputVersionInfo(void)
 {
-    printf("\nElf Object File to cFE Table Image File Conversion Tool\n");
-    printf(" Version v3.1.5\n");
-    printf(" Built - %s %s\n\n", __DATE__, __TIME__);
+    printf("\n%s\n", ELF2CFETBL_VERSION_STRING);    
 }
 
 /**
@@ -1283,6 +1290,7 @@ void OutputVersionInfo(void)
 
 void OutputHelpInfo(void)
 {
+    printf("\nElf Object File to cFE Table Image File Conversion Tool (elf2cfetbl)\n\n");      
     printf("elf2cfetbl [-tTblName] [-d\"Description\"] [-h] [-v] [-V] [-s#] [-p#] [-n] \n");
     printf("           [-T] [-eYYYY:MM:DD:hh:mm:ss] [-fYYYY:MM:DD:hh:mm:ss] SrcFilename [DestDirectory]\n");
     printf("   where:\n");
@@ -1757,7 +1765,15 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
 
             case SHT_STRTAB:
                 sprintf(VerboseStr, "SHT_STRTAB (3)");
-                if (SectionIndex != get_e_shstrndx(&ElfHeader))
+                /*
+                 * If the section name is ".strtab" then preferentially use this section for symbol name data
+                 * Otherwise use the first section which is NOT the section header string table (.shstrtab)
+                 *
+                 * Not all compilers generate a separate strtab for section header names; some put everything
+                 * into one string table.
+                 */
+                if (strcmp(SectionNamePtrs[SectionIndex],".strtab") == 0 ||
+                        (StringTableDataOffset == 0 && SectionIndex != get_e_shstrndx(&ElfHeader)))
                 {
                     StringTableDataOffset = get_sh_offset(SectionHeader);
                 }
@@ -2246,6 +2262,12 @@ int32 GetTblDefInfo(void)
         }
         fseek(SrcFileDesc, SeekOffset, SEEK_SET);
         NumDefsRead = fread(&TblFileDef, sizeof(CFE_TBL_FileDef_t), 1, SrcFileDesc);
+
+        /* ensuring all are strings are null-terminated */
+        TblFileDef.ObjectName[sizeof(TblFileDef.ObjectName) - 1] = '\0';
+        TblFileDef.TableName[sizeof(TblFileDef.TableName) - 1] = '\0';
+        TblFileDef.Description[sizeof(TblFileDef.Description) - 1] = '\0';
+        TblFileDef.TgtFilename[sizeof(TblFileDef.TgtFilename) - 1] = '\0';
 
         if (NumDefsRead != 1)
         {

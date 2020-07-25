@@ -2,11 +2,18 @@
 
 This repository contains NASA's ELF to cFE Table Converter Tool (elf2cfetbl), which is a framework component of the Core Flight System.
 
-This lab application is a ground utility to convert ELF to cFE binary tables for cFS. It is intended to be located in the `tools/elf2cfetbl` subdirectory of a cFS Mission Tree. The Core Flight System is bundled at <https://github.com/nasa/cFS> (which includes this tool as a submodule), which includes build and execution instructions.
+This lab application is a ground utility to convert ELF to cFE binary tables for cFS. It is intended to be located in the `tools/elf2cfetbl` subdirectory of a cFS Mission Tree. The Core Flight System is bundled at <https://github.com/nasa/cFS>, which includes this tool as a submodule, and includes build and execution instructions.
 
 See README.txt for more information.
 
 ## Version History
+
+### Development Build: v3.1.0+dev39
+
+- Adds a null to the end of SrcFilename and DstFilename when using strncpy.
+- Support ELF files that have all strings, including ELF section names, in one single ".strtab" section in the ELF file.
+- Version reporting now uses the version numbers defined in elf_version.h and reports build number.
+- See  <https://github.com/nasa/elf2cfetbl/pull/47>
 
 ### Development Build: 3.1.5
 
