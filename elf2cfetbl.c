@@ -1439,6 +1439,8 @@ int32 OpenSrcFile(void)
 
 int32 OpenDstFile(void)
 {
+    struct stat dststat;
+
     // Check to see if output file can be opened and written
     DstFileDesc = fopen(DstFilename, "w");
 
@@ -1446,6 +1448,17 @@ int32 OpenDstFile(void)
     {
         printf("'%s' was not opened\n", DstFilename);
         return FAILED;
+    }
+
+    /* Fix file if too permissive (CWE-732) */
+    if (stat(DstFilename, &dststat) == 0)
+    {
+        if (Verbose)
+            printf("%s: Destination file permissions after open = 0x%X\n", DstFilename, dststat.st_mode);
+        chmod(DstFilename, dststat.st_mode & ~(S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH));
+        stat(DstFilename, &dststat);
+        if (Verbose)
+            printf("%s: Destination file permissions after chmod = 0x%X\n", DstFilename, dststat.st_mode);
     }
 
     return SUCCESS;
