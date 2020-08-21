@@ -929,7 +929,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
     int32     Status              = SUCCESS;
     bool      InputFileSpecified  = false;
     bool      OutputFileSpecified = false;
-    int16     i                   = 1;
+    int       i                   = 1;
     char *    EndPtr;
     uint32    MaxDay;
     struct tm FileEpochTm;
