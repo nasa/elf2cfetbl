@@ -1404,7 +1404,8 @@ int32 GetDstFilename(void)
 
 int32 OpenSrcFile(void)
 {
-    int RtnCode;
+    int       RtnCode;
+    char      TimeBuff[50];
 
     // Check to see if input file can be found and opened
     SrcFileDesc = fopen(SrcFilename, "r");
@@ -1422,10 +1423,11 @@ int32 OpenSrcFile(void)
         SrcFileTimeInScEpoch = SrcFileStats.st_mtime + EpochDelta;
 
         if (Verbose)
-            printf("Original Source File Modification Time: %s\n", ctime(&SrcFileStats.st_mtime));
-        if (Verbose)
+        {
+            printf("Original Source File Modification Time: %s\n", ctime_r(&SrcFileStats.st_mtime, TimeBuff));
             printf("Source File Modification Time in Seconds since S/C Epoch: %ld (0x%08lX)\n", SrcFileTimeInScEpoch,
                    SrcFileTimeInScEpoch);
+        }
     }
     else
     {
