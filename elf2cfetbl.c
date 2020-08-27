@@ -90,8 +90,8 @@ void PrintSymbol32(union Elf_Sym *Symbol);
 void PrintSymbol64(union Elf_Sym *Symbol);
 void PrintSectionHeader32(union Elf_Shdr *SectionHeader);
 void PrintSectionHeader64(union Elf_Shdr *SectionHeader);
-void PrintElfHeader32(union Elf_Ehdr ElfHeader);
-void PrintElfHeader64(union Elf_Ehdr ElfHeader);
+void PrintElfHeader32(union Elf_Ehdr ElfHeaderLcl);
+void PrintElfHeader64(union Elf_Ehdr ElfHeaderLcl);
 
 /**
  *    Global Variables
@@ -357,75 +357,75 @@ ElfStrMap e_machine_Map[] = {
 };
 
 // Elf Header helper functions
-uint8_t get_e_ident(const union Elf_Ehdr *ElfHeader, int index)
+uint8_t get_e_ident(const union Elf_Ehdr *ElfHeaderLcl, int index)
 {
     if (TargetWordsizeIs32Bit)
     {
-        return ElfHeader->Ehdr32.e_ident[index];
+        return ElfHeaderLcl->Ehdr32.e_ident[index];
     }
     else
     {
-        return ElfHeader->Ehdr64.e_ident[index];
+        return ElfHeaderLcl->Ehdr64.e_ident[index];
     }
 }
 
-uint16_t get_e_type(const union Elf_Ehdr *ElfHeader)
+uint16_t get_e_type(const union Elf_Ehdr *ElfHeaderLcl)
 {
     if (TargetWordsizeIs32Bit)
     {
-        return ElfHeader->Ehdr32.e_type;
+        return ElfHeaderLcl->Ehdr32.e_type;
     }
     else
     {
-        return ElfHeader->Ehdr64.e_type;
+        return ElfHeaderLcl->Ehdr64.e_type;
     }
 }
 
-uint16_t get_e_machine(const union Elf_Ehdr *ElfHeader)
+uint16_t get_e_machine(const union Elf_Ehdr *ElfHeaderLcl)
 {
     if (TargetWordsizeIs32Bit)
     {
-        return ElfHeader->Ehdr32.e_machine;
+        return ElfHeaderLcl->Ehdr32.e_machine;
     }
     else
     {
-        return ElfHeader->Ehdr64.e_machine;
+        return ElfHeaderLcl->Ehdr64.e_machine;
     }
 }
 
-uint32_t get_e_version(const union Elf_Ehdr *ElfHeader)
+uint32_t get_e_version(const union Elf_Ehdr *ElfHeaderLcl)
 {
     if (TargetWordsizeIs32Bit)
     {
-        return ElfHeader->Ehdr32.e_version;
+        return ElfHeaderLcl->Ehdr32.e_version;
     }
     else
     {
-        return ElfHeader->Ehdr64.e_version;
+        return ElfHeaderLcl->Ehdr64.e_version;
     }
 }
 
-uint16_t get_e_shstrndx(const union Elf_Ehdr *ElfHeader)
+uint16_t get_e_shstrndx(const union Elf_Ehdr *ElfHeaderLcl)
 {
     if (TargetWordsizeIs32Bit)
     {
-        return ElfHeader->Ehdr32.e_shstrndx;
+        return ElfHeaderLcl->Ehdr32.e_shstrndx;
     }
     else
     {
-        return ElfHeader->Ehdr64.e_shstrndx;
+        return ElfHeaderLcl->Ehdr64.e_shstrndx;
     }
 }
 
-uint16_t get_e_shnum(const union Elf_Ehdr *ElfHeader)
+uint16_t get_e_shnum(const union Elf_Ehdr *ElfHeaderLcl)
 {
     if (TargetWordsizeIs32Bit)
     {
-        return ElfHeader->Ehdr32.e_shnum;
+        return ElfHeaderLcl->Ehdr32.e_shnum;
     }
     else
     {
-        return ElfHeader->Ehdr64.e_shnum;
+        return ElfHeaderLcl->Ehdr64.e_shnum;
     }
 }
 
@@ -2009,58 +2009,58 @@ void PrintSectionHeader64(union Elf_Shdr *SectionHeader)
         printf("   sh_entsize    = 0x%08lx\n", (long unsigned int)SectionHeader->Shdr64.sh_entsize);
 }
 
-void PrintElfHeader32(union Elf_Ehdr ElfHeader)
+void PrintElfHeader32(union Elf_Ehdr ElfHeaderLcl)
 {
     if (Verbose)
-        printf("   e_version = %d\n", get_e_version(&ElfHeader));
+        printf("   e_version = %d\n", get_e_version(&ElfHeaderLcl));
     if (Verbose)
-        printf("   e_entry = 0x%x\n", ElfHeader.Ehdr32.e_entry);
+        printf("   e_entry = 0x%x\n", ElfHeaderLcl.Ehdr32.e_entry);
     if (Verbose)
-        printf("   e_phoff = 0x%08x (%u)\n", ElfHeader.Ehdr32.e_phoff, ElfHeader.Ehdr32.e_phoff);
+        printf("   e_phoff = 0x%08x (%u)\n", ElfHeaderLcl.Ehdr32.e_phoff, ElfHeaderLcl.Ehdr32.e_phoff);
     if (Verbose)
-        printf("   e_shoff = 0x%08x (%u)\n", ElfHeader.Ehdr32.e_shoff, ElfHeader.Ehdr32.e_shoff);
+        printf("   e_shoff = 0x%08x (%u)\n", ElfHeaderLcl.Ehdr32.e_shoff, ElfHeaderLcl.Ehdr32.e_shoff);
     if (Verbose)
-        printf("   e_flags = 0x%08x\n", ElfHeader.Ehdr32.e_flags);
+        printf("   e_flags = 0x%08x\n", ElfHeaderLcl.Ehdr32.e_flags);
     if (Verbose)
-        printf("   e_ehsize = %d\n", ElfHeader.Ehdr32.e_ehsize);
+        printf("   e_ehsize = %d\n", ElfHeaderLcl.Ehdr32.e_ehsize);
     if (Verbose)
-        printf("   e_phentsize = %d\n", ElfHeader.Ehdr32.e_phentsize);
+        printf("   e_phentsize = %d\n", ElfHeaderLcl.Ehdr32.e_phentsize);
     if (Verbose)
-        printf("   e_phnum = %d\n", ElfHeader.Ehdr32.e_phnum);
+        printf("   e_phnum = %d\n", ElfHeaderLcl.Ehdr32.e_phnum);
     if (Verbose)
-        printf("   e_shentsize = %d\n", ElfHeader.Ehdr32.e_shentsize);
+        printf("   e_shentsize = %d\n", ElfHeaderLcl.Ehdr32.e_shentsize);
     if (Verbose)
-        printf("   e_shnum = %d\n", get_e_shnum(&ElfHeader));
+        printf("   e_shnum = %d\n", get_e_shnum(&ElfHeaderLcl));
     if (Verbose)
-        printf("   e_shstrndx = %d\n", get_e_shstrndx(&ElfHeader));
+        printf("   e_shstrndx = %d\n", get_e_shstrndx(&ElfHeaderLcl));
 }
 
-void PrintElfHeader64(union Elf_Ehdr ElfHeader)
+void PrintElfHeader64(union Elf_Ehdr ElfHeaderLcl)
 {
     if (Verbose)
-        printf("   e_version = %d\n", get_e_version(&ElfHeader));
+        printf("   e_version = %d\n", get_e_version(&ElfHeaderLcl));
     if (Verbose)
-        printf("   e_entry = 0x%lx\n", (long unsigned int)ElfHeader.Ehdr64.e_entry);
+        printf("   e_entry = 0x%lx\n", (long unsigned int)ElfHeaderLcl.Ehdr64.e_entry);
     if (Verbose)
-        printf("   e_phoff = 0x%08lx (%lu)\n", (long unsigned int)ElfHeader.Ehdr64.e_phoff,
-               (long unsigned int)ElfHeader.Ehdr64.e_phoff);
+        printf("   e_phoff = 0x%08lx (%lu)\n", (long unsigned int)ElfHeaderLcl.Ehdr64.e_phoff,
+               (long unsigned int)ElfHeaderLcl.Ehdr64.e_phoff);
     if (Verbose)
-        printf("   e_shoff = 0x%08lx (%lu)\n", (long unsigned int)ElfHeader.Ehdr64.e_shoff,
-               (long unsigned int)ElfHeader.Ehdr64.e_shoff);
+        printf("   e_shoff = 0x%08lx (%lu)\n", (long unsigned int)ElfHeaderLcl.Ehdr64.e_shoff,
+               (long unsigned int)ElfHeaderLcl.Ehdr64.e_shoff);
     if (Verbose)
-        printf("   e_flags = 0x%08x\n", ElfHeader.Ehdr64.e_flags);
+        printf("   e_flags = 0x%08x\n", ElfHeaderLcl.Ehdr64.e_flags);
     if (Verbose)
-        printf("   e_ehsize = %d\n", ElfHeader.Ehdr64.e_ehsize);
+        printf("   e_ehsize = %d\n", ElfHeaderLcl.Ehdr64.e_ehsize);
     if (Verbose)
-        printf("   e_phentsize = %d\n", ElfHeader.Ehdr64.e_phentsize);
+        printf("   e_phentsize = %d\n", ElfHeaderLcl.Ehdr64.e_phentsize);
     if (Verbose)
-        printf("   e_phnum = %d\n", ElfHeader.Ehdr64.e_phnum);
+        printf("   e_phnum = %d\n", ElfHeaderLcl.Ehdr64.e_phnum);
     if (Verbose)
-        printf("   e_shentsize = %d\n", ElfHeader.Ehdr64.e_shentsize);
+        printf("   e_shentsize = %d\n", ElfHeaderLcl.Ehdr64.e_shentsize);
     if (Verbose)
-        printf("   e_shnum = %d\n", get_e_shnum(&ElfHeader));
+        printf("   e_shnum = %d\n", get_e_shnum(&ElfHeaderLcl));
     if (Verbose)
-        printf("   e_shstrndx = %d\n", get_e_shstrndx(&ElfHeader));
+        printf("   e_shstrndx = %d\n", get_e_shstrndx(&ElfHeaderLcl));
 }
 
 void SwapElfHeader(void)
