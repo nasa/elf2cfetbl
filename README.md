@@ -8,6 +8,13 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.2.0+dev9
+- Restricts destination file permissions
+- Squash int comparison warning
+- Replace ctime (which generates LGTM warning) with ctime_r
+- Deconflicts global/local parameters
+- See  <https://github.com/nasa/elf2cfetbl/pull/62>
+
 ### Development Build: v3.1.0+dev39
 
 - Adds a null to the end of SrcFilename and DstFilename when using strncpy.
