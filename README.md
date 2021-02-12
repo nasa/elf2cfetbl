@@ -1,3 +1,6 @@
+![Static Analysis](https://github.com/nasa/elf2cfetbl/workflows/Static%20Analysis/badge.svg)
+![Format Check](https://github.com/nasa/elf2cfetbl/workflows/Format%20Check/badge.svg)
+
 # Core Flight System : Framework : Tool : ELF to cFE Table Converter
 
 This repository contains NASA's ELF to cFE Table Converter Tool (elf2cfetbl), which is a framework component of the Core Flight System.
