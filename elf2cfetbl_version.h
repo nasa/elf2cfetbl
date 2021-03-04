@@ -18,21 +18,21 @@
 **  limitations under the License.
 */
 
-
 /*! @file elf2cfetbl_version.h
  * @brief Purpose:
  *  @details Provide version identifiers for the ELF to cFE Table Converter. @n
  *  See @ref cfsversions for version and build number and description
- * 
+ *
  */
 #ifndef ELF2CFETBL_VERSION_H
 #define ELF2CFETBL_VERSION_H
 
 /*
- * Development Build Macro Definitions 
+ * Development Build Macro Definitions
  */
-#define ELF2CFETBL_BUILD_NUMBER 9 /*!< @brief Number of commits since baseline */
-#define ELF2CFETBL_BUILD_BASELINE "v3.2.0-rc1" /*!< @brief Development Build: git tag that is the base for the current */
+#define ELF2CFETBL_BUILD_NUMBER 20 /*!< @brief Number of commits since baseline */
+#define ELF2CFETBL_BUILD_BASELINE \
+    "v3.2.0-rc1" /*!< @brief Development Build: git tag that is the base for the current */
 
 /*
  * Version Macro Definitions
@@ -44,20 +44,21 @@
 
 /*
  * Tools to construct version string
- */ 
+ */
 #define ELF2CFETBL_STR_HELPER(x) #x /*!< @brief Helper function to concatenate strings from integer macros */
-#define ELF2CFETBL_STR(x)        ELF2CFETBL_STR_HELPER(x) /*!< @brief Helper function to concatenate strings from integer macros */
+#define ELF2CFETBL_STR(x) \
+    ELF2CFETBL_STR_HELPER(x) /*!< @brief Helper function to concatenate strings from integer macros */
 
-/*! @brief Development Build Version Number. 
+/*! @brief Development Build Version Number.
  * @details Baseline git tag + Number of commits since baseline. @n
  * See @ref cfsversions for format differences between development and release versions.
  */
 #define ELF2CFETBL_VERSION ELF2CFETBL_BUILD_BASELINE ELF2CFETBL_STR(ELF2CFETBL_BUILD_NUMBER)
 
 /*! @brief Development Build Version String.
- * @details Reports the current development build's baseline, number, and name. Also includes a note about the latest official version. @n
- * See @ref cfsversions for format differences between development and release versions. 
-*/     
+ * @details Reports the current development build's baseline, number, and name. Also includes a note about the latest
+ * official version. @n See @ref cfsversions for format differences between development and release versions.
+ */
 #define ELF2CFETBL_VERSION_STRING                                                         \
     " elf2cfetbl Development Build\n"                                                     \
     " " ELF2CFETBL_VERSION " (Codename: Bootes)\n" /* Codename for current development */ \
