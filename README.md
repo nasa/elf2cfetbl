@@ -11,6 +11,10 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.2.0-rc1+dev24
+- Fix #73, Add Testing Tools to the Security Policy
+- See <https://github.com/nasa/elf2cfetbl/pull/75>
+
 ### Development Build: v3.2.0+dev20
 - Changes cpp-styled comments to c-style to meet coding standard
 - See <https://github.com/nasa/elf2cfetbl/pull/72>
