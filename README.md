@@ -11,15 +11,23 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.2.0-rc1+dev30
+
+-  Implement Coding Standard in CodeQL workflow
+- See <https://github.com/nasa/elf2cfetbl/pull/81> and <https://github.com/nasa/cFS/pull/270>
+
 ### Development Build: v3.2.0-rc1+dev24
-- Fix #73, Add Testing Tools to the Security Policy
+
+- Add Testing Tools to the Security Policy
 - See <https://github.com/nasa/elf2cfetbl/pull/75>
 
 ### Development Build: v3.2.0+dev20
+
 - Changes cpp-styled comments to c-style to meet coding standard
 - See <https://github.com/nasa/elf2cfetbl/pull/72>
 
 ### Development Build: v3.2.0+dev9
+
 - Restricts destination file permissions
 - Squash int comparison warning
 - Replace ctime (which generates LGTM warning) with ctime_r
