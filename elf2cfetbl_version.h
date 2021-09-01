@@ -62,6 +62,6 @@
 #define ELF2CFETBL_VERSION_STRING                                                         \
     " elf2cfetbl Development Build\n"                                                     \
     " " ELF2CFETBL_VERSION " (Codename: Bootes)\n" /* Codename for current development */ \
-    " Last Offical Release: elf2cfetbl v3.1.0"     /* For full support please use official release version */
+    " Last Official Release: elf2cfetbl v3.1.0"     /* For full support please use official release version */
 
 #endif /* ELF2CFETBL_VERSION_H */
