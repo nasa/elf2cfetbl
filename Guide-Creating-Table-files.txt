@@ -44,4 +44,4 @@ Note(s)
 --------  
 
     1. If you are getting install errors when you do a "make install", make sure your table's output name
-       is consistence in all program files. 
+       is consistent in all program files. 
