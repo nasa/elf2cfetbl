@@ -52,7 +52,7 @@ CREATING THE UTILITY:
    been updated to look for the elf2cfetbl utility in the correct place. 
    In this case, check the file:
    <path-to-cfe>/cfe/fsw/cfe-core/src/make/table-rules.mak
-   In this file, make sure the table rule looke like this:
+   In this file, make sure the table rule looks like this:
    #
    # Default table rule
    #

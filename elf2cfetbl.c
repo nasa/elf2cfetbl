@@ -1305,7 +1305,7 @@ void OutputHelpInfo(void)
     printf("   -Scccc                specifies a Spacecraft ID as a 4 byte string to be put into the table file file "
            "header.\n");
     printf("                         cccc represents the 4 ASCII characters that will be encoded into the 32 bit "
-           "Spacecaft ID field.\n");
+           "Spacecraft ID field.\n");
     printf("                              examples: -SMMS1 or -SQQ#2\n");
     printf("   -p#                   specifies a Processor ID to be put into file header.\n");
     printf("                         # can be specified as decimal, octal (starting with a zero), or hex (starting "
@@ -1626,7 +1626,7 @@ int32 GetElfHeader(void)
 
     if (NumHdrsRead != 1)
     {
-        printf("Experienced error attempting to read remaining sELF Header from file '%s'\n", SrcFilename);
+        printf("Experienced error attempting to read remaining ELF Header from file '%s'\n", SrcFilename);
         return FAILED;
     }
 
