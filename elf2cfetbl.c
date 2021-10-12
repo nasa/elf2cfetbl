@@ -1774,7 +1774,14 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
                     SymbolTableDataOffset = SectionHeader->Shdr64.sh_offset + sizeof(Elf64_Sym);
                 }
                 SymbolTableEntrySize = get_sh_entsize(SectionHeader);
-                NumSymbols           = (get_sh_size(SectionHeader) / get_sh_entsize(SectionHeader)) - 1;
+                if (SymbolTableEntrySize == 0)
+                {
+                    NumSymbols = 0;
+                }
+                else
+                {
+                    NumSymbols = (get_sh_size(SectionHeader) / SymbolTableEntrySize) - 1;
+                }
                 sprintf(VerboseStr, "SHT_SYMTAB (2) - # Symbols = %lu", (long unsigned int)NumSymbols);
                 break;
 
