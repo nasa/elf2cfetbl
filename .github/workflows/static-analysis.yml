@@ -23,6 +23,7 @@ jobs:
   cpp-check:    
     name: Run cppcheck
     needs: check-for-duplicates
+    if: ${{ needs.check-for-duplicates.outputs.should_skip != 'true' }}
     runs-on: ubuntu-18.04
     timeout-minutes: 15
 
@@ -35,7 +36,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run general cppcheck
-        run: cppcheck --force --inline-suppr --quiet . 2> cppcheck_err.txt
+        run: cppcheck --force --inline-suppr . 2> cppcheck_err.txt
 
       - name: Archive Static Analysis Artifacts
         uses: actions/upload-artifact@v2
