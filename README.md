@@ -11,6 +11,13 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.3.0-rc4+dev4
+
+- Fix Untrusted divisor (TAINTED_SCALAR) static analysis warning by checking `get_sh_entsize(SectionHeader)`
+- Set baseline for cFS-Caelum-rc4: v3.3.0-rc4
+- Update mission rev to use 0xFF for development version
+- See <https://github.com/nasa/elf2cfetbl/pull/98> and <https://github.com/nasa/cfs/pull/390>
+
 ### Development Build: v3.2.0-rc1+dev30
 
 -  Implement Coding Standard in CodeQL workflow
