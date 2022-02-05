@@ -19,6 +19,9 @@
 **      limitations under the License.
 **
 */
+#ifndef ELF_STRUCTURES_H
+#define ELF_STRUCTURES_H
+
 #include <stdint.h>
 
 typedef uint32_t Elf32_Addr;
@@ -475,3 +478,5 @@ union Elf_Sym
 
 #define STT_LOPROC 13 /**< \brief Values >= are reserved for processor specific semantics */
 #define STT_HIPROC 15 /**< \brief Values <= are reserved for processor specific semantics */
+
+#endif
