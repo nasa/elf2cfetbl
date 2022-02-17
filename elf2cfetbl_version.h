@@ -18,7 +18,7 @@
 **  limitations under the License.
 */
 
-/*! @file elf2cfetbl_version.h
+/*! @file
  * @brief Purpose:
  *  @details Provide version identifiers for the ELF to cFE Table Converter. @n
  *  See @ref cfsversions for version and build number and description
