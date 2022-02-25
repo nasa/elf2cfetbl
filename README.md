@@ -11,6 +11,12 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.3.0-rc4+dev11
+
+- Apply header guard standard 
+- Remove explicit filename doxygen comments
+- See <https://github.com/nasa/cFS/pull/432>
+
 ### Development Build: v3.3.0-rc4+dev4
 
 - Fix Untrusted divisor (TAINTED_SCALAR) static analysis warning by checking `get_sh_entsize(SectionHeader)`
