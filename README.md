@@ -11,6 +11,12 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.3.0-rc4+dev18
+
+- Update Copyright Headers
+- Standardize version.h 
+- See <https://github.com/nasa/elf2cfetbl/pull/108> and <https://github.com/nasa/cFS/445>
+
 ### Development Build: v3.3.0-rc4+dev11
 
 - Apply header guard standard 
