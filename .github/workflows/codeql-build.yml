@@ -7,7 +7,7 @@ on:
 jobs:
   codeql:
     name: Codeql
-    uses: nasa/cFS/.github/workflows/codeql-build.yml@main
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
     with: 
-      make-prep: 'make prep'
-      make: 'make tools/elf2cfetbl/'
+      component-path: tools/elf2cfetbl
+      make: 'make -C build/tools/elf2cfetbl'
