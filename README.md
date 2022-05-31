@@ -11,6 +11,11 @@ See README.txt for more information.
 
 ## Version History
 
+### Development Build: v3.3.0-rc4+dev24
+
+- Resolve uninit var static analysis warnings
+- See <https://github.com/nasa/elf2cfetbl/pull/113> and <https://github.com/nasa/cFS/pull/492> 
+
 ### Development Build: v3.3.0-rc4+dev18
 
 - Update Copyright Headers
