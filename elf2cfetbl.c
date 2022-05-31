@@ -1883,6 +1883,9 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
     int32_t  SeekOffset        = (int32_t)calculated_offset;
     char     VerboseStr[60];
     int32    i = 0;
+
+    memset(VerboseStr, 0, sizeof(VerboseStr));
+
     if (SeekOffset != calculated_offset)
     {
         printf("Error: SeekOffset may not be %lu\n", (long unsigned int)calculated_offset);
