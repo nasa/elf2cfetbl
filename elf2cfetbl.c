@@ -37,9 +37,9 @@
 #include "elf2cfetbl_version.h"
 
 #define MAX_SECTION_HDR_NAME_LEN (128)
-#define TBL_DEF_SYMBOL_NAME      "CFE_TBL_FileDef"
-#define SUCCESS                  (0)
-#define FAILED                   (1)
+#define TBL_DEF_SYMBOL_NAME "CFE_TBL_FileDef"
+#define SUCCESS (0)
+#define FAILED (1)
 
 /* macro to construct 32 bit value from 4 chars */
 #define U32FROM4CHARS(_C1, _C2, _C3, _C4) \
@@ -48,7 +48,7 @@
 typedef struct
 {
     int32 Value;
-    char  String[50];
+    char String[50];
 } ElfStrMap;
 
 /**
@@ -60,24 +60,24 @@ int32 GetDstFilename(void);
 int32 OpenSrcFile(void);
 int32 OpenDstFile(void);
 int32 GetElfHeader(void);
-void  SwapElfHeader(void);
+void SwapElfHeader(void);
 int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader);
-void  SwapSectionHeader(union Elf_Shdr *SectionHeader);
+void SwapSectionHeader(union Elf_Shdr *SectionHeader);
 int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol);
-void  SwapSymbol(union Elf_Sym *Symbol);
+void SwapSymbol(union Elf_Sym *Symbol);
 int32 GetStringFromMap(char *Result, ElfStrMap *Map, int32 Key);
-void  SwapUInt16(uint16 *ValueToSwap);
-void  SwapUInt32(uint32 *ValueToSwap);
-void  SwapUInt64(uint64 *ValueToSwap);
+void SwapUInt16(uint16 *ValueToSwap);
+void SwapUInt32(uint32 *ValueToSwap);
+void SwapUInt64(uint64 *ValueToSwap);
 int32 AllocateSectionHeaders(void);
-void  DeallocateSectionHeaders(void);
+void DeallocateSectionHeaders(void);
 int32 AllocateSymbols(void);
-void  DeallocateSymbols(void);
-void  FreeMemoryAllocations(void);
+void DeallocateSymbols(void);
+void FreeMemoryAllocations(void);
 int32 GetTblDefInfo(void);
 int32 OutputDataToTargetFile(void);
-void  OutputVersionInfo(void);
-void  OutputHelpInfo(void);
+void OutputVersionInfo(void);
+void OutputHelpInfo(void);
 int32 LocateAndReadUserObject(void);
 
 void PrintSymbol32(union Elf_Sym *Symbol);
@@ -92,55 +92,55 @@ void PrintElfHeader64(union Elf_Ehdr ElfHeaderLcl);
  */
 char SrcFilename[PATH_MAX] = {""};
 char DstFilename[PATH_MAX] = {""};
-char TableName[38]         = {""};
-char Description[32]       = {""};
-char LineOfText[300]       = {""};
+char TableName[38] = {""};
+char Description[32] = {""};
+char LineOfText[300] = {""};
 
-bool Verbose                     = false;
-bool ReportVersion               = false;
-bool OutputHelp                  = false;
-bool ByteSwapRequired            = false;
-bool ScIDSpecified               = false;
-bool ProcIDSpecified             = false;
-bool AppIDSpecified              = false;
-bool ScEpochSpecified            = false;
-bool FileEpochSpecified          = false;
-bool TableNameOverride           = false;
-bool DescriptionOverride         = false;
-bool ThisMachineIsLittleEndian   = true;
+bool Verbose = false;
+bool ReportVersion = false;
+bool OutputHelp = false;
+bool ByteSwapRequired = false;
+bool ScIDSpecified = false;
+bool ProcIDSpecified = false;
+bool AppIDSpecified = false;
+bool ScEpochSpecified = false;
+bool FileEpochSpecified = false;
+bool TableNameOverride = false;
+bool DescriptionOverride = false;
+bool ThisMachineIsLittleEndian = true;
 bool TargetMachineIsLittleEndian = true;
-bool EnableTimeTagInHeader       = false;
-bool TargetWordsizeIs32Bit       = true;
+bool EnableTimeTagInHeader = false;
+bool TargetWordsizeIs32Bit = true;
 
 bool TableDataIsAllZeros = false;
 
 FILE *SrcFileDesc = NULL;
 FILE *DstFileDesc = NULL;
 
-CFE_FS_Header_t    FileHeader;
+CFE_FS_Header_t FileHeader;
 CFE_TBL_File_Hdr_t TableHeader;
 
-union Elf_Ehdr   ElfHeader;
-union Elf_Shdr **SectionHeaderPtrs                  = NULL;
-union Elf_Shdr   SectionHeaderStringTable           = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-int64            SectionHeaderStringTableDataOffset = 0;
-char **          SectionNamePtrs                    = NULL;
+union Elf_Ehdr ElfHeader;
+union Elf_Shdr **SectionHeaderPtrs = NULL;
+union Elf_Shdr SectionHeaderStringTable = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+int64 SectionHeaderStringTableDataOffset = 0;
+char **SectionNamePtrs = NULL;
 
 struct stat SrcFileStats;
 
-uint64_t          StringTableDataOffset = 0;
-int32             SymbolTableDataOffset = 0;
-uint64_t          NumSymbols            = 0;
-uint64_t          SymbolTableEntrySize  = 0;
-union Elf_Sym **  SymbolPtrs            = NULL;
-char **           SymbolNames;
-int32             TblDefSymbolIndex = -1;
+uint64_t StringTableDataOffset = 0;
+int32 SymbolTableDataOffset = 0;
+uint64_t NumSymbols = 0;
+uint64_t SymbolTableEntrySize = 0;
+union Elf_Sym **SymbolPtrs = NULL;
+char **SymbolNames;
+int32 TblDefSymbolIndex = -1;
 CFE_TBL_FileDef_t TblFileDef;
-int32             UserObjSymbolIndex = -1;
-uint32            SpacecraftID       = 0;
-uint32            ProcessorID        = 0;
-uint32            ApplicationID      = 0;
-time_t            EpochTime          = 0;
+int32 UserObjSymbolIndex = -1;
+uint32 SpacecraftID = 0;
+uint32 ProcessorID = 0;
+uint32 ApplicationID = 0;
+time_t EpochTime = 0;
 
 typedef struct
 {
@@ -152,17 +152,21 @@ typedef struct
     uint32 Second;
 } SpecifiedEpoch_t;
 
-SpecifiedEpoch_t ScEpoch   = {1970, 1, 1, 0, 0, 0};
+SpecifiedEpoch_t ScEpoch = {1970, 1, 1, 0, 0, 0};
 SpecifiedEpoch_t FileEpoch = {1970, 1, 1, 0, 0, 0};
-time_t           EpochDelta;
-time_t           SrcFileTimeInScEpoch;
+time_t EpochDelta;
+time_t SrcFileTimeInScEpoch;
 
 /**
  *    ELF Characteristic Maps
  */
 ElfStrMap e_type_Map[] = {
-    {ET_NONE, "ET_NONE (0)"}, {ET_REL, "ET_REL (1)"},   {ET_EXEC, "ET_EXEC (2)"},
-    {ET_DYN, "ET_DYN (3)"},   {ET_CORE, "ET_CORE (4)"}, {0, "* Unknown Elf File Type (%d) *"},
+    {ET_NONE, "ET_NONE (0)"},
+    {ET_REL, "ET_REL (1)"},
+    {ET_EXEC, "ET_EXEC (2)"},
+    {ET_DYN, "ET_DYN (3)"},
+    {ET_CORE, "ET_CORE (4)"},
+    {0, "* Unknown Elf File Type (%d) *"},
 };
 
 ElfStrMap e_machine_Map[] = {
@@ -603,7 +607,7 @@ uint16_t get_st_shndx(const union Elf_Sym *Symbol)
 int main(int argc, char *argv[])
 {
     int32 Status = SUCCESS;
-    int32 i      = 0;
+    int32 i = 0;
 
     Status = ProcessCmdLineOptions(argc, argv);
     if (Status != SUCCESS)
@@ -728,7 +732,7 @@ int main(int argc, char *argv[])
 int32 AllocateSectionHeaders(void)
 {
     int32 Status = SUCCESS;
-    int32 i      = 0;
+    int32 i = 0;
 
     if (get_e_shnum(&ElfHeader) == 0)
     {
@@ -757,7 +761,7 @@ int32 AllocateSectionHeaders(void)
             for (i = 0; i < get_e_shnum(&ElfHeader); i++)
             {
                 SectionHeaderPtrs[i] = NULL;
-                SectionNamePtrs[i]   = NULL;
+                SectionNamePtrs[i] = NULL;
             }
 
             /* Allocate memory for each header */
@@ -821,7 +825,7 @@ void DeallocateSectionHeaders(void)
 int32 AllocateSymbols(void)
 {
     int32 Status = SUCCESS;
-    int32 i      = 0;
+    int32 i = 0;
 
     if (NumSymbols == 0)
     {
@@ -847,7 +851,7 @@ int32 AllocateSymbols(void)
 
         for (i = 0; i < NumSymbols; i++)
         {
-            SymbolPtrs[i]  = NULL;
+            SymbolPtrs[i] = NULL;
             SymbolNames[i] = NULL;
         }
 
@@ -920,16 +924,16 @@ void FreeMemoryAllocations(void)
 
 int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 {
-    int32     Status              = SUCCESS;
-    bool      InputFileSpecified  = false;
-    bool      OutputFileSpecified = false;
-    int       i                   = 1;
-    char *    EndPtr;
-    uint32    MaxDay;
+    int32 Status = SUCCESS;
+    bool InputFileSpecified = false;
+    bool OutputFileSpecified = false;
+    int i = 1;
+    char *EndPtr;
+    uint32 MaxDay;
     struct tm FileEpochTm;
     struct tm ScEpochTm;
-    time_t    FileEpochInSecs;
-    time_t    ScEpochInSecs;
+    time_t FileEpochInSecs;
+    time_t ScEpochInSecs;
 
     while ((i < ArgumentCount) && (Status == SUCCESS))
     {
@@ -938,14 +942,14 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
             /* Extract the Table Name Override */
             strncpy(TableName, &Arguments[i][2], sizeof(TableName) - 1);
             TableName[sizeof(TableName) - 1] = 0;
-            TableNameOverride                = true;
+            TableNameOverride = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'd'))
         {
             /* Extract the Description Override */
             strncpy(Description, &Arguments[i][2], sizeof(Description) - 1);
             Description[sizeof(Description) - 1] = 0;
-            DescriptionOverride                  = true;
+            DescriptionOverride = true;
         }
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 's'))
         {
@@ -964,7 +968,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         {
             if (strlen(&Arguments[i][2]) == 4)
             {
-                SpacecraftID  = U32FROM4CHARS(Arguments[i][2], Arguments[i][3], Arguments[i][4], Arguments[i][5]);
+                SpacecraftID = U32FROM4CHARS(Arguments[i][2], Arguments[i][3], Arguments[i][4], Arguments[i][5]);
                 ScIDSpecified = true;
             }
             else
@@ -989,7 +993,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'p'))
         {
             ProcIDSpecified = true;
-            ProcessorID     = strtoul(&Arguments[i][2], &EndPtr, 0);
+            ProcessorID = strtoul(&Arguments[i][2], &EndPtr, 0);
             if (EndPtr != &Arguments[i][2])
             {
                 ProcIDSpecified = true;
@@ -1004,7 +1008,7 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         {
             if (strlen(&Arguments[i][2]) == 4)
             {
-                ProcessorID     = U32FROM4CHARS(Arguments[i][2], Arguments[i][3], Arguments[i][4], Arguments[i][5]);
+                ProcessorID = U32FROM4CHARS(Arguments[i][2], Arguments[i][3], Arguments[i][4], Arguments[i][5]);
                 ProcIDSpecified = true;
             }
             else
@@ -1229,13 +1233,13 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         {
             strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
             SrcFilename[PATH_MAX - 1] = '\0';
-            InputFileSpecified        = true;
+            InputFileSpecified = true;
         }
         else if (!OutputFileSpecified)
         {
             strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
             DstFilename[PATH_MAX - 1] = '\0';
-            OutputFileSpecified       = true;
+            OutputFileSpecified = true;
         }
         else
         {
@@ -1244,22 +1248,22 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
         }
         i++;
     }
-    FileEpochTm.tm_sec   = FileEpoch.Second;
-    FileEpochTm.tm_min   = FileEpoch.Minute;
-    FileEpochTm.tm_hour  = FileEpoch.Hour;
-    FileEpochTm.tm_mday  = FileEpoch.Day;
-    FileEpochTm.tm_mon   = FileEpoch.Month - 1;
-    FileEpochTm.tm_year  = FileEpoch.Year - 1900;
+    FileEpochTm.tm_sec = FileEpoch.Second;
+    FileEpochTm.tm_min = FileEpoch.Minute;
+    FileEpochTm.tm_hour = FileEpoch.Hour;
+    FileEpochTm.tm_mday = FileEpoch.Day;
+    FileEpochTm.tm_mon = FileEpoch.Month - 1;
+    FileEpochTm.tm_year = FileEpoch.Year - 1900;
     FileEpochTm.tm_isdst = -1;
 
     FileEpochInSecs = mktime(&FileEpochTm);
 
-    ScEpochTm.tm_sec   = ScEpoch.Second;
-    ScEpochTm.tm_min   = ScEpoch.Minute;
-    ScEpochTm.tm_hour  = ScEpoch.Hour;
-    ScEpochTm.tm_mday  = ScEpoch.Day;
-    ScEpochTm.tm_mon   = ScEpoch.Month - 1;
-    ScEpochTm.tm_year  = ScEpoch.Year - 1900;
+    ScEpochTm.tm_sec = ScEpoch.Second;
+    ScEpochTm.tm_min = ScEpoch.Minute;
+    ScEpochTm.tm_hour = ScEpoch.Hour;
+    ScEpochTm.tm_mday = ScEpoch.Day;
+    ScEpochTm.tm_mon = ScEpoch.Month - 1;
+    ScEpochTm.tm_year = ScEpoch.Year - 1900;
     ScEpochTm.tm_isdst = -1;
 
     ScEpochInSecs = mktime(&ScEpochTm);
@@ -1365,7 +1369,7 @@ int32 GetSrcFilename(void)
     if (strlen(SrcFilename) == 0)
     {
         OutputHelp = true;
-        Status     = FAILED;
+        Status = FAILED;
     }
 
     return Status;
@@ -1398,7 +1402,7 @@ int32 GetDstFilename(void)
 
 int32 OpenSrcFile(void)
 {
-    int  RtnCode;
+    int RtnCode;
     char TimeBuff[50];
 
     /* Check to see if input file can be found and opened */
@@ -1466,10 +1470,10 @@ int32 OpenDstFile(void)
 
 int32 GetElfHeader(void)
 {
-    int32  Status      = SUCCESS;
+    int32 Status = SUCCESS;
     size_t NumHdrsRead = 0;
-    char   VerboseStr[60];
-    int32  EndiannessCheck = 0x01020304;
+    char VerboseStr[60];
+    int32 EndiannessCheck = 0x01020304;
 
     if (((char *)&EndiannessCheck)[0] == 0x01)
     {
@@ -1521,29 +1525,29 @@ int32 GetElfHeader(void)
     /* Verify the processor class type */
     switch (get_e_ident(&ElfHeader, EI_CLASS))
     {
-        case ELFCLASSNONE:
-            sprintf(VerboseStr, "ELFCLASSNONE (0)");
-            Status = FAILED;
-            break;
+    case ELFCLASSNONE:
+        sprintf(VerboseStr, "ELFCLASSNONE (0)");
+        Status = FAILED;
+        break;
 
-        case ELFCLASS32:
-            sprintf(VerboseStr, "ELFCLASS32 (1)");
-            if (Verbose)
-                printf("Target table is 32 bit\n");
-            TargetWordsizeIs32Bit = true;
-            break;
+    case ELFCLASS32:
+        sprintf(VerboseStr, "ELFCLASS32 (1)");
+        if (Verbose)
+            printf("Target table is 32 bit\n");
+        TargetWordsizeIs32Bit = true;
+        break;
 
-        case ELFCLASS64:
-            sprintf(VerboseStr, "ELFCLASS64 (2)");
-            if (Verbose)
-                printf("Target table is 64 bit\n");
-            TargetWordsizeIs32Bit = false;
-            break;
+    case ELFCLASS64:
+        sprintf(VerboseStr, "ELFCLASS64 (2)");
+        if (Verbose)
+            printf("Target table is 64 bit\n");
+        TargetWordsizeIs32Bit = false;
+        break;
 
-        default:
-            sprintf(VerboseStr, "Invalid Class (%d)", get_e_ident(&ElfHeader, EI_CLASS));
-            Status = FAILED;
-            break;
+    default:
+        sprintf(VerboseStr, "Invalid Class (%d)", get_e_ident(&ElfHeader, EI_CLASS));
+        Status = FAILED;
+        break;
     }
 
     if (Status == FAILED)
@@ -1559,33 +1563,33 @@ int32 GetElfHeader(void)
     /* Verify Data Encoding type */
     switch (get_e_ident(&ElfHeader, EI_DATA))
     {
-        case ELFDATANONE:
-            sprintf(VerboseStr, "ELFDATANONE");
-            Status = FAILED;
-            break;
+    case ELFDATANONE:
+        sprintf(VerboseStr, "ELFDATANONE");
+        Status = FAILED;
+        break;
 
-        case ELFDATA2LSB:
-            sprintf(VerboseStr, "ELFDATA2LSB (Little-Endian)");
-            TargetMachineIsLittleEndian = true;
-            if (ThisMachineIsLittleEndian == false)
-            {
-                ByteSwapRequired = true;
-            }
-            break;
+    case ELFDATA2LSB:
+        sprintf(VerboseStr, "ELFDATA2LSB (Little-Endian)");
+        TargetMachineIsLittleEndian = true;
+        if (ThisMachineIsLittleEndian == false)
+        {
+            ByteSwapRequired = true;
+        }
+        break;
 
-        case ELFDATA2MSB:
-            sprintf(VerboseStr, "ELFDATA2MSB (Big-Endian)");
-            TargetMachineIsLittleEndian = false;
-            if (ThisMachineIsLittleEndian == true)
-            {
-                ByteSwapRequired = true;
-            }
-            break;
+    case ELFDATA2MSB:
+        sprintf(VerboseStr, "ELFDATA2MSB (Big-Endian)");
+        TargetMachineIsLittleEndian = false;
+        if (ThisMachineIsLittleEndian == true)
+        {
+            ByteSwapRequired = true;
+        }
+        break;
 
-        default:
-            sprintf(VerboseStr, "Unknown Data Encoding Type (%d)", get_e_ident(&ElfHeader, EI_DATA));
-            Status = FAILED;
-            break;
+    default:
+        sprintf(VerboseStr, "Unknown Data Encoding Type (%d)", get_e_ident(&ElfHeader, EI_DATA));
+        Status = FAILED;
+        break;
     }
 
     if (Status == FAILED)
@@ -1678,22 +1682,22 @@ int32 GetElfHeader(void)
 
 int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
 {
-    int32  Status      = SUCCESS;
+    int32 Status = SUCCESS;
     size_t NumHdrsRead = 0;
-    char   VerboseStr[60];
-    int64  SeekOffset;
-    int32  Shentsize;
-    int32  i = 0;
+    char VerboseStr[60];
+    int64 SeekOffset;
+    int32 Shentsize;
+    int32 i = 0;
 
     if (TargetWordsizeIs32Bit)
     {
         SeekOffset = ElfHeader.Ehdr32.e_shoff;
-        Shentsize  = ElfHeader.Ehdr32.e_shentsize;
+        Shentsize = ElfHeader.Ehdr32.e_shentsize;
     }
     else
     {
         SeekOffset = ElfHeader.Ehdr64.e_shoff;
-        Shentsize  = ElfHeader.Ehdr64.e_shentsize;
+        Shentsize = ElfHeader.Ehdr64.e_shentsize;
     }
 
     if (SectionIndex > 0)
@@ -1750,106 +1754,106 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
 
         switch (get_sh_type(SectionHeader))
         {
-            case SHT_NULL:
-                sprintf(VerboseStr, "SHT_NULL (0)");
-                break;
+        case SHT_NULL:
+            sprintf(VerboseStr, "SHT_NULL (0)");
+            break;
 
-            case SHT_PROGBITS:
-                sprintf(VerboseStr, "SHT_PROGBITS (1)");
-                break;
+        case SHT_PROGBITS:
+            sprintf(VerboseStr, "SHT_PROGBITS (1)");
+            break;
 
-            case SHT_SYMTAB:
-                if (TargetWordsizeIs32Bit)
-                {
-                    SymbolTableDataOffset = SectionHeader->Shdr32.sh_offset + sizeof(Elf32_Sym);
-                }
-                else
-                {
-                    SymbolTableDataOffset = SectionHeader->Shdr64.sh_offset + sizeof(Elf64_Sym);
-                }
-                SymbolTableEntrySize = get_sh_entsize(SectionHeader);
-                if (SymbolTableEntrySize == 0)
-                {
-                    NumSymbols = 0;
-                }
-                else
-                {
-                    NumSymbols = (get_sh_size(SectionHeader) / SymbolTableEntrySize) - 1;
-                }
-                sprintf(VerboseStr, "SHT_SYMTAB (2) - # Symbols = %lu", (long unsigned int)NumSymbols);
-                break;
+        case SHT_SYMTAB:
+            if (TargetWordsizeIs32Bit)
+            {
+                SymbolTableDataOffset = SectionHeader->Shdr32.sh_offset + sizeof(Elf32_Sym);
+            }
+            else
+            {
+                SymbolTableDataOffset = SectionHeader->Shdr64.sh_offset + sizeof(Elf64_Sym);
+            }
+            SymbolTableEntrySize = get_sh_entsize(SectionHeader);
+            if (SymbolTableEntrySize == 0)
+            {
+                NumSymbols = 0;
+            }
+            else
+            {
+                NumSymbols = (get_sh_size(SectionHeader) / SymbolTableEntrySize) - 1;
+            }
+            sprintf(VerboseStr, "SHT_SYMTAB (2) - # Symbols = %lu", (long unsigned int)NumSymbols);
+            break;
 
-            case SHT_STRTAB:
-                sprintf(VerboseStr, "SHT_STRTAB (3)");
-                /*
-                 * If the section name is ".strtab" then preferentially use this section for symbol name data
-                 * Otherwise use the first section which is NOT the section header string table (.shstrtab)
-                 *
-                 * Not all compilers generate a separate strtab for section header names; some put everything
-                 * into one string table.
-                 */
-                if (strcmp(SectionNamePtrs[SectionIndex], ".strtab") == 0 ||
-                    (StringTableDataOffset == 0 && SectionIndex != get_e_shstrndx(&ElfHeader)))
-                {
-                    StringTableDataOffset = get_sh_offset(SectionHeader);
-                }
-                break;
+        case SHT_STRTAB:
+            sprintf(VerboseStr, "SHT_STRTAB (3)");
+            /*
+             * If the section name is ".strtab" then preferentially use this section for symbol name data
+             * Otherwise use the first section which is NOT the section header string table (.shstrtab)
+             *
+             * Not all compilers generate a separate strtab for section header names; some put everything
+             * into one string table.
+             */
+            if (strcmp(SectionNamePtrs[SectionIndex], ".strtab") == 0 ||
+                (StringTableDataOffset == 0 && SectionIndex != get_e_shstrndx(&ElfHeader)))
+            {
+                StringTableDataOffset = get_sh_offset(SectionHeader);
+            }
+            break;
 
-            case SHT_RELA:
-                sprintf(VerboseStr, "SHT_RELA (4)");
-                break;
+        case SHT_RELA:
+            sprintf(VerboseStr, "SHT_RELA (4)");
+            break;
 
-            case SHT_HASH:
-                sprintf(VerboseStr, "SHT_HASH (5)");
-                break;
+        case SHT_HASH:
+            sprintf(VerboseStr, "SHT_HASH (5)");
+            break;
 
-            case SHT_DYNAMIC:
-                sprintf(VerboseStr, "SHT_DYNAMIC (6)");
-                break;
+        case SHT_DYNAMIC:
+            sprintf(VerboseStr, "SHT_DYNAMIC (6)");
+            break;
 
-            case SHT_NOTE:
-                sprintf(VerboseStr, "SHT_NOTE (7)");
-                break;
+        case SHT_NOTE:
+            sprintf(VerboseStr, "SHT_NOTE (7)");
+            break;
 
-            case SHT_NOBITS:
-                sprintf(VerboseStr, "SHT_NOBITS (8)");
-                break;
+        case SHT_NOBITS:
+            sprintf(VerboseStr, "SHT_NOBITS (8)");
+            break;
 
-            case SHT_REL:
-                sprintf(VerboseStr, "SHT_REL (9)");
-                break;
+        case SHT_REL:
+            sprintf(VerboseStr, "SHT_REL (9)");
+            break;
 
-            case SHT_SHLIB:
-                sprintf(VerboseStr, "SHT_SHLIB (10)");
-                break;
+        case SHT_SHLIB:
+            sprintf(VerboseStr, "SHT_SHLIB (10)");
+            break;
 
-            case SHT_DYNSYM:
-                sprintf(VerboseStr, "SHT_DYNSYM (11)");
-                break;
+        case SHT_DYNSYM:
+            sprintf(VerboseStr, "SHT_DYNSYM (11)");
+            break;
 
-            case SHT_INIT_ARRAY:
-                sprintf(VerboseStr, "SHT_INIT_ARRAY (14)");
-                break;
+        case SHT_INIT_ARRAY:
+            sprintf(VerboseStr, "SHT_INIT_ARRAY (14)");
+            break;
 
-            case SHT_FINI_ARRAY:
-                sprintf(VerboseStr, "SHT_FINI_ARRAY (15)");
-                break;
+        case SHT_FINI_ARRAY:
+            sprintf(VerboseStr, "SHT_FINI_ARRAY (15)");
+            break;
 
-            case SHT_PREINIT_ARRAY:
-                sprintf(VerboseStr, "SHT_PREINIT_ARRAY (16)");
-                break;
+        case SHT_PREINIT_ARRAY:
+            sprintf(VerboseStr, "SHT_PREINIT_ARRAY (16)");
+            break;
 
-            case SHT_GROUP:
-                sprintf(VerboseStr, "SHT_GROUP (17)");
-                break;
+        case SHT_GROUP:
+            sprintf(VerboseStr, "SHT_GROUP (17)");
+            break;
 
-            case SHT_SYMTAB_SHNDX:
-                sprintf(VerboseStr, "SHT_SYMTAB_SHNDX (18)");
-                break;
+        case SHT_SYMTAB_SHNDX:
+            sprintf(VerboseStr, "SHT_SYMTAB_SHNDX (18)");
+            break;
 
-            default:
-                sprintf(VerboseStr, "Unknown (%d)", get_sh_type(SectionHeader));
-                break;
+        default:
+            sprintf(VerboseStr, "Unknown (%d)", get_sh_type(SectionHeader));
+            break;
         }
 
         if (Verbose)
@@ -1877,12 +1881,12 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
 
 int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
 {
-    int32    Status            = SUCCESS;
-    int32    NumSymRead        = 0;
+    int32 Status = SUCCESS;
+    int32 NumSymRead = 0;
     uint64_t calculated_offset = SymbolTableDataOffset + (SymbolIndex * SymbolTableEntrySize);
-    int32_t  SeekOffset        = (int32_t)calculated_offset;
-    char     VerboseStr[60];
-    int32    i = 0;
+    int32_t SeekOffset = (int32_t)calculated_offset;
+    char VerboseStr[60];
+    int32 i = 0;
 
     memset(VerboseStr, 0, sizeof(VerboseStr));
 
@@ -2178,10 +2182,10 @@ void SwapSymbol(union Elf_Sym *Symbol)
 
 void SwapUInt16(uint16 *ValueToSwap)
 {
-    uint8 *BytePtr  = (uint8 *)ValueToSwap;
-    uint8  TempByte = BytePtr[1];
-    BytePtr[1]      = BytePtr[0];
-    BytePtr[0]      = TempByte;
+    uint8 *BytePtr = (uint8 *)ValueToSwap;
+    uint8 TempByte = BytePtr[1];
+    BytePtr[1] = BytePtr[0];
+    BytePtr[0] = TempByte;
 }
 
 /**
@@ -2190,33 +2194,33 @@ void SwapUInt16(uint16 *ValueToSwap)
 
 void SwapUInt32(uint32 *ValueToSwap)
 {
-    uint8 *BytePtr  = (uint8 *)ValueToSwap;
-    uint8  TempByte = BytePtr[3];
-    BytePtr[3]      = BytePtr[0];
-    BytePtr[0]      = TempByte;
-    TempByte        = BytePtr[2];
-    BytePtr[2]      = BytePtr[1];
-    BytePtr[1]      = TempByte;
+    uint8 *BytePtr = (uint8 *)ValueToSwap;
+    uint8 TempByte = BytePtr[3];
+    BytePtr[3] = BytePtr[0];
+    BytePtr[0] = TempByte;
+    TempByte = BytePtr[2];
+    BytePtr[2] = BytePtr[1];
+    BytePtr[1] = TempByte;
 }
 
 void SwapUInt64(uint64 *ValueToSwap)
 {
     uint8 *BytePtr = (uint8 *)ValueToSwap;
-    uint8  TempByte;
+    uint8 TempByte;
 
-    TempByte   = BytePtr[7];
+    TempByte = BytePtr[7];
     BytePtr[7] = BytePtr[0];
     BytePtr[0] = TempByte;
 
-    TempByte   = BytePtr[6];
+    TempByte = BytePtr[6];
     BytePtr[6] = BytePtr[1];
     BytePtr[1] = TempByte;
 
-    TempByte   = BytePtr[5];
+    TempByte = BytePtr[5];
     BytePtr[5] = BytePtr[2];
     BytePtr[2] = TempByte;
 
-    TempByte   = BytePtr[4];
+    TempByte = BytePtr[4];
     BytePtr[4] = BytePtr[3];
     BytePtr[3] = TempByte;
 }
@@ -2244,7 +2248,8 @@ int32 GetStringFromMap(char *Result, ElfStrMap *Map, int32 Key)
 
     if (Status == FAILED)
     {
-        sprintf(Result, Map->String, Key);
+        // Using snprintf to avoid overflow
+        snprintf(Result, 49, Map->String, Key);
     }
 
     return Status;
@@ -2256,9 +2261,9 @@ int32 GetStringFromMap(char *Result, ElfStrMap *Map, int32 Key)
 
 int32 GetTblDefInfo(void)
 {
-    int32  Status      = SUCCESS;
-    uint32 SeekOffset  = 0;
-    int32  NumDefsRead = 0;
+    int32 Status = SUCCESS;
+    uint32 SeekOffset = 0;
+    int32 NumDefsRead = 0;
 
     /* Read the data to be used to format the CFE File and Table Headers */
     if ((get_st_size(SymbolPtrs[TblDefSymbolIndex]) != sizeof(CFE_TBL_FileDef_t)) &&
@@ -2283,8 +2288,8 @@ int32 GetTblDefInfo(void)
         NumDefsRead = fread(&TblFileDef, sizeof(CFE_TBL_FileDef_t), 1, SrcFileDesc);
 
         /* ensuring all are strings are null-terminated */
-        TblFileDef.ObjectName[sizeof(TblFileDef.ObjectName) - 1]   = '\0';
-        TblFileDef.TableName[sizeof(TblFileDef.TableName) - 1]     = '\0';
+        TblFileDef.ObjectName[sizeof(TblFileDef.ObjectName) - 1] = '\0';
+        TblFileDef.TableName[sizeof(TblFileDef.TableName) - 1] = '\0';
         TblFileDef.Description[sizeof(TblFileDef.Description) - 1] = '\0';
         TblFileDef.TgtFilename[sizeof(TblFileDef.TgtFilename) - 1] = '\0';
 
@@ -2327,11 +2332,11 @@ int32 GetTblDefInfo(void)
 
 int32 LocateAndReadUserObject(void)
 {
-    int32  Status     = SUCCESS;
-    int32  i          = 0;
-    int32  j          = 0;
+    int32 Status = SUCCESS;
+    int32 i = 0;
+    int32 j = 0;
     uint32 SeekOffset = 0;
-    uint8  AByte;
+    uint8 AByte;
 
     /* Search the symbol table for the user defined object */
     if (Verbose)
@@ -2490,13 +2495,13 @@ int32 LocateAndReadUserObject(void)
 int32 OutputDataToTargetFile()
 {
     int32 Status = SUCCESS;
-    uint8 AByte  = 0;
-    int32 i      = 0;
+    uint8 AByte = 0;
+    int32 i = 0;
 
     /* Create the standard header */
     FileHeader.ContentType = 0x63464531;
-    FileHeader.SubType     = CFE_FS_SubType_TBL_IMG;
-    FileHeader.Length      = sizeof(CFE_FS_Header_t);
+    FileHeader.SubType = CFE_FS_SubType_TBL_IMG;
+    FileHeader.Length = sizeof(CFE_FS_Header_t);
 
     if (ScIDSpecified == true)
     {
@@ -2527,12 +2532,12 @@ int32 OutputDataToTargetFile()
 
     if (EnableTimeTagInHeader)
     {
-        FileHeader.TimeSeconds    = SrcFileTimeInScEpoch;
+        FileHeader.TimeSeconds = SrcFileTimeInScEpoch;
         FileHeader.TimeSubSeconds = 0;
     }
     else
     {
-        FileHeader.TimeSeconds    = 0;
+        FileHeader.TimeSeconds = 0;
         FileHeader.TimeSubSeconds = 0;
     }
 
