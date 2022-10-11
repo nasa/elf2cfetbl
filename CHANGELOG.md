@@ -1,5 +1,9 @@
 # Changelog
 
+## Development Build: v3.3.0-rc4+dev26
+- Create CHANGELOG.md
+- See <https://github.com/nasa/elf2cfetbl/pull/117>
+
 ## Development Build: v3.3.0-rc4+dev24
 
 - Resolve uninit var static analysis warnings
