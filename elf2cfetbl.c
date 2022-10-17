@@ -350,7 +350,7 @@ ElfStrMap e_machine_Map[] = {
     {0, "* Unknown Machine Type (%d) *"},
 };
 
-// Elf Header helper functions
+/* Elf Header helper functions */
 uint8_t get_e_ident(const union Elf_Ehdr *ElfHeaderLcl, int index)
 {
     if (TargetWordsizeIs32Bit)
@@ -423,7 +423,7 @@ uint16_t get_e_shnum(const union Elf_Ehdr *ElfHeaderLcl)
     }
 }
 
-// Elf Section Header helper functions
+/* Elf Section Header helper functions */
 
 uint32_t get_sh_name(const union Elf_Shdr *SectionHeader)
 {
@@ -530,7 +530,7 @@ uint64_t get_sh_entsize(const union Elf_Shdr *SectionHeader)
     }
 }
 
-// Elf_Sym helper functions
+/* Elf_Sym helper functions */
 
 uint32_t get_st_name(const union Elf_Sym *Symbol)
 {
