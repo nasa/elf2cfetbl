@@ -1735,7 +1735,15 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
         SeekOffset = SectionHeaderStringTableDataOffset + get_sh_name(SectionHeader);
         if (Verbose)
             printf("   sh_name       = 0x%08x - ", get_sh_name(SectionHeader));
-        fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+        Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+        if (Status != 0)
+        {
+            printf("Error setting file ptr after retrieving sh_name for Section Header #%d in file '%s'\n",
+                   SectionIndex, SrcFilename);
+            return FAILED;
+        }
 
         while ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0')
         {
@@ -1926,7 +1934,15 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
     SeekOffset = StringTableDataOffset + get_st_name(Symbol);
     if (Verbose)
         printf("   st_name  = 0x%08x - ", get_st_name(Symbol));
-    fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+    Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+    if (Status != 0)
+    {
+        printf("Error setting file ptr after retrieving st_name for Symbol #%d in file '%s'\n", SymbolIndex,
+               SrcFilename);
+        return FAILED;
+    }
 
     while ((i < sizeof(VerboseStr)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
     {
@@ -2279,7 +2295,15 @@ int32 GetTblDefInfo(void)
             printf("Error: SeekOffset may not be %lu\n", (long unsigned int)calculated_offset);
             Status = FAILED;
         }
-        fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+        Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+        if (Status != 0)
+        {
+            printf("Error setting file ptr during read-in of '%s' in file '%s'\n", TBL_DEF_SYMBOL_NAME, SrcFilename);
+            return FAILED;
+        }
+
         NumDefsRead = fread(&TblFileDef, sizeof(CFE_TBL_FileDef_t), 1, SrcFileDesc);
 
         /* ensuring all are strings are null-terminated */
@@ -2433,7 +2457,15 @@ int32 LocateAndReadUserObject(void)
                 printf("Error: SeekOffset may not be %lu\n", (long unsigned int)calculated_offset);
                 Status = FAILED;
             }
-            fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+            Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+            if (Status != 0)
+            {
+                printf("Error setting file ptr while locating data for '%s' object in file '%s'\n",
+                       TblFileDef.ObjectName, SrcFilename);
+                return FAILED;
+            }
 
             /* Determine if the elf file contained the size of the object */
             if (get_st_size(SymbolPtrs[UserObjSymbolIndex]) != 0)
@@ -2474,8 +2506,16 @@ int32 LocateAndReadUserObject(void)
                         j = 0;
                     }
                 }
+
                 /* Reset the file pointer */
-                fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+                Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+                if (Status != 0)
+                {
+                    printf("Error resetting file ptr after retrieving '%s' object data in file '%s'\n",
+                           TblFileDef.ObjectName, SrcFilename);
+                    return FAILED;
+                }
             }
         }
     }
