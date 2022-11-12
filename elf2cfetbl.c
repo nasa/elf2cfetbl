@@ -1452,7 +1452,12 @@ int32 OpenDstFile(void)
         if (Verbose)
             printf("%s: Destination file permissions after open = 0x%X\n", DstFilename, dststat.st_mode);
         chmod(DstFilename, dststat.st_mode & ~(S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH));
-        stat(DstFilename, &dststat);
+
+        if (stat(DstFilename, &dststat) != 0)
+        {
+            printf("%s: Error retrieving file status after chmod\n", DstFilename);
+        }
+
         if (Verbose)
             printf("%s: Destination file permissions after chmod = 0x%X\n", DstFilename, dststat.st_mode);
     }
