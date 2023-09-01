@@ -596,6 +596,24 @@ uint16_t get_st_shndx(const union Elf_Sym *Symbol)
     }
 }
 
+/* Check status helper functions */
+void CheckStatusAndExit(int32 status)
+{
+    if (status != SUCCESS)
+    {
+        exit(status);
+    }
+}
+
+void CheckStatusCleanupAndExit(int32 status)
+{
+    if (status != SUCCESS)
+    {
+        FreeMemoryAllocations();
+        exit(status);
+    }
+}
+
 /**
  *
  */
@@ -606,30 +624,26 @@ int main(int argc, char *argv[])
     int32 i      = 0;
 
     Status = ProcessCmdLineOptions(argc, argv);
-    if (Status != SUCCESS)
-        return Status;
+    CheckStatusAndExit(Status);
 
     if (ReportVersion)
         OutputVersionInfo();
 
-    Status = GetSrcFilename();
     if (OutputHelp)
         OutputHelpInfo();
-    if (Status != SUCCESS)
-        return Status;
+
+    Status = GetSrcFilename();
+    CheckStatusAndExit(Status);
 
     Status = OpenSrcFile();
-    if (Status != SUCCESS)
-        return Status;
+    CheckStatusAndExit(Status);
 
     Status = GetElfHeader();
-    if (Status != SUCCESS)
-        return Status;
+    CheckStatusAndExit(Status);
 
     /* Get the string section header first */
     Status = GetSectionHeader(get_e_shstrndx(&ElfHeader), &SectionHeaderStringTable);
-    if (Status != SUCCESS)
-        return Status;
+    CheckStatusCleanupAndExit(Status);
 
     if (TargetWordsizeIs32Bit)
     {
@@ -642,21 +656,13 @@ int main(int argc, char *argv[])
 
     /* Allocate memory for all of the ELF object file section headers */
     Status = AllocateSectionHeaders();
-    if (Status != SUCCESS)
-    {
-        FreeMemoryAllocations();
-        return Status;
-    }
+    CheckStatusCleanupAndExit(Status);
 
     /* Read in each section header from input file */
     for (i = 0; i < get_e_shnum(&ElfHeader); i++)
     {
         Status = GetSectionHeader(i, SectionHeaderPtrs[i]);
-        if (Status != SUCCESS)
-        {
-            FreeMemoryAllocations();
-            return Status;
-        }
+        CheckStatusCleanupAndExit(Status);
     }
 
     if (StringTableDataOffset == 0)
@@ -667,21 +673,13 @@ int main(int argc, char *argv[])
 
     /* Allocate memory for all of the symbol table entries */
     Status = AllocateSymbols();
-    if (Status != SUCCESS)
-    {
-        FreeMemoryAllocations();
-        return Status;
-    }
+    CheckStatusCleanupAndExit(Status);
 
     /* Read in each symbol table entry */
     for (i = 0; i < NumSymbols; i++)
     {
         Status = GetSymbol(i, SymbolPtrs[i]);
-        if (Status != SUCCESS)
-        {
-            FreeMemoryAllocations();
-            return Status;
-        }
+        CheckStatusCleanupAndExit(Status);
     }
 
     if (TblDefSymbolIndex == -1)
@@ -693,26 +691,16 @@ int main(int argc, char *argv[])
 
     /* Read in the definition of the table file */
     Status = GetTblDefInfo();
-    if (Status != SUCCESS)
-    {
-        FreeMemoryAllocations();
-        return Status;
-    }
+    CheckStatusCleanupAndExit(Status);
 
     Status = GetDstFilename();
-    if (Status != SUCCESS)
-        return Status;
+    CheckStatusAndExit(Status);
 
     Status = OpenDstFile();
-    if (Status != SUCCESS)
-        return Status;
+    CheckStatusAndExit(Status);
 
     Status = LocateAndReadUserObject();
-    if (Status != SUCCESS)
-    {
-        FreeMemoryAllocations();
-        return Status;
-    }
+    CheckStatusCleanupAndExit(Status);
 
     Status = OutputDataToTargetFile();
 
