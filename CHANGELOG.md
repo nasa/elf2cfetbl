@@ -1,5 +1,10 @@
 # Changelog
 
+## Development Build: v3.3.0-rc4+dev36
+- Adds CheckStatus helper functions
+- Reduce cyclomatic complexity of GetElfHeader
+- See <https://github.com/nasa/elf2cfetbl/pull/137> and <https://github.com/nasa/elf2cfetbl/pull/136>
+
 ## Development Build: v3.3.0-rc4+dev30
 - Remove C++-style comments
 - See <https://github.com/nasa/elf2cfetbl/pull/119>
