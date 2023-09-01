@@ -59,6 +59,7 @@ int32 GetSrcFilename(void);
 int32 GetDstFilename(void);
 int32 OpenSrcFile(void);
 int32 OpenDstFile(void);
+int32 checkELFFileMagicNumber(void);
 int32 GetElfHeader(void);
 void  SwapElfHeader(void);
 int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader);
@@ -1452,6 +1453,18 @@ int32 OpenDstFile(void)
  *
  */
 
+int32 checkELFFileMagicNumber(void)
+{
+    if (get_e_ident(&ElfHeader, EI_MAG0) != ELFMAG0 || get_e_ident(&ElfHeader, EI_MAG1) != ELFMAG1 ||
+        get_e_ident(&ElfHeader, EI_MAG2) != ELFMAG2 || get_e_ident(&ElfHeader, EI_MAG3) != ELFMAG3)
+        return FAILED;
+    return SUCCESS;
+}
+
+/**
+ *
+ */
+
 int32 GetElfHeader(void)
 {
     int32  Status      = SUCCESS;
@@ -1481,20 +1494,15 @@ int32 GetElfHeader(void)
     }
 
     if (Verbose)
-        printf("ELF Header:\n");
-    if (Verbose)
-        printf("   e_ident[EI_MAG0..3] = 0x%02x,%c%c%c\n", get_e_ident(&ElfHeader, EI_MAG0),
-               get_e_ident(&ElfHeader, EI_MAG1), get_e_ident(&ElfHeader, EI_MAG2), get_e_ident(&ElfHeader, EI_MAG3));
+    {
+        printf("ELF Header:\n"
+               "   e_ident[EI_MAG0..3] = 0x%02x,%c%c%c\n",
+               get_e_ident(&ElfHeader, EI_MAG0), get_e_ident(&ElfHeader, EI_MAG1), get_e_ident(&ElfHeader, EI_MAG2),
+               get_e_ident(&ElfHeader, EI_MAG3));
+    }
 
     /* Verify the ELF file magic number */
-    if (get_e_ident(&ElfHeader, EI_MAG0) != ELFMAG0)
-        Status = FAILED;
-    if (get_e_ident(&ElfHeader, EI_MAG1) != ELFMAG1)
-        Status = FAILED;
-    if (get_e_ident(&ElfHeader, EI_MAG2) != ELFMAG2)
-        Status = FAILED;
-    if (get_e_ident(&ElfHeader, EI_MAG3) != ELFMAG3)
-        Status = FAILED;
+    Status = checkELFFileMagicNumber();
 
     if (Status == FAILED)
     {
