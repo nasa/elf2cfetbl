@@ -34,6 +34,7 @@
 #include <limits.h>
 #include "ELF_Structures.h"
 #include "cfe_tbl_filedef.h"
+#include "cfe_version.h"
 #include "elf2cfetbl_version.h"
 
 #define MAX_SECTION_HDR_NAME_LEN (128)
@@ -1264,7 +1265,12 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 
 void OutputVersionInfo(void)
 {
-    printf("\n%s\n", ELF2CFETBL_VERSION_STRING);
+    char VersionString[ELF2CFETBL_CFG_MAX_VERSION_STR_LEN];
+
+    CFE_Config_GetVersionString(VersionString, ELF2CFETBL_CFG_MAX_VERSION_STR_LEN, "elf2cfetbl",
+        ELF2CFETBL_VERSION, ELF2CFETBL_BUILD_CODENAME, ELF2CFETBL_LAST_OFFICIAL);
+
+    printf("\n%s\n", VersionString);
 }
 
 /**
