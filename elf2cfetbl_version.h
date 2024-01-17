@@ -28,7 +28,7 @@
 /*
  * Development Build Macro Definitions
  */
-#define ELF2CFETBL_BUILD_NUMBER     36 /*!< @brief Number of commits since baseline */
+#define ELF2CFETBL_BUILD_NUMBER     10 /*!< @brief Number of commits since baseline */
 #define ELF2CFETBL_BUILD_BASELINE   "equuleues-rc1" /*!< @brief Development Build: git tag that is the base for the current */
 #define ELF2CFETBL_BUILD_DEV_CYCLE  "equuleus-rc2" /**< @brief Development: Release name for current development cycle */
 #define ELF2CFETBL_BUILD_CODENAME   "Equuleus" /**< @brief: Development: Code name for the current build */
