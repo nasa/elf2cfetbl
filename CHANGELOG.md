@@ -1,5 +1,10 @@
 # Changelog
 
+## Development Build: equuleus-rc1+dev10
+- updating ELF2CFETBL to use new versioning system
+- move scripts for table building to elf2cfetbl tool
+- See <https://github.com/nasa/elf2cfetbl/pull/144> and <https://github.com/nasa/elf2cfetbl/pull/143>
+
 ## Development Build: v3.3.0-rc4+dev36
 - Adds CheckStatus helper functions
 - Reduce cyclomatic complexity of GetElfHeader

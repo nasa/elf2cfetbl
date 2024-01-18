@@ -1264,7 +1264,15 @@ int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
 
 void OutputVersionInfo(void)
 {
-    printf("\n%s\n", ELF2CFETBL_VERSION_STRING);
+    char VersionString[ELF2CFETBL_CFG_MAX_VERSION_STR_LEN];
+
+    snprintf(VersionString, ELF2CFETBL_CFG_MAX_VERSION_STR_LEN,
+        "%s %s %s (Codename %s), Last Official Release: %s %s)",
+        "elf2cfetbl", ELF2CFETBL_REVISION == 0 ? "Development Build" : "Release",
+        ELF2CFETBL_VERSION, ELF2CFETBL_BUILD_CODENAME, "elf2cfetbl",
+        ELF2CFETBL_LAST_OFFICIAL);
+
+    printf("\n%s\n", VersionString);
 }
 
 /**
