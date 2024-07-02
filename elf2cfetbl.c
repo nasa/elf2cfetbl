@@ -1458,7 +1458,11 @@ int32 OpenDstFile(void)
             return FAILED;
         }
 
-        stat(DstFilename, &dststat);
+        if (stat(DstFilename, &dststat) != 0)
+        {
+            printf("%s: Error retrieving file status after chmod\n", DstFilename);
+        }
+
         if (Verbose)
             printf("%s: Destination file permissions after chmod = 0x%X\n", DstFilename, dststat.st_mode);
     }
