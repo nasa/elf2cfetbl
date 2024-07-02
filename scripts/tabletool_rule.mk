@@ -12,4 +12,4 @@ cfetables:
 # As a workaround, $CURDIR is used.
 staging/%.tbl:
 	@mkdir -pv "$(dir $(@))"
-	cd "$(dir $(@))" && $(TBLTOOL) $(TBLTOOL_FLAGS) "$(CURDIR)/$(<)"
+	cd "$(dir $(@))" && $(TBLTOOL) -p$(CFE_TABLE_PRID) -s$(CFE_TABLE_SCID) "$(CURDIR)/$(<)"
