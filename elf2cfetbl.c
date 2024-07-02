@@ -1433,6 +1433,7 @@ int32 OpenSrcFile(void)
 int32 OpenDstFile(void)
 {
     struct stat dststat;
+    int32       Status = SUCCESS;
 
     /* Check to see if output file can be opened and written */
     DstFileDesc = fopen(DstFilename, "w");
@@ -1448,8 +1449,20 @@ int32 OpenDstFile(void)
     {
         if (Verbose)
             printf("%s: Destination file permissions after open = 0x%X\n", DstFilename, dststat.st_mode);
-        chmod(DstFilename, dststat.st_mode & ~(S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH));
-        stat(DstFilename, &dststat);
+
+        Status = chmod(DstFilename, dststat.st_mode & ~(S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH));
+
+        if (Status != 0)
+        {
+            printf("%s: Error while attempting to modify file permissions\n", DstFilename);
+            return FAILED;
+        }
+
+        if (stat(DstFilename, &dststat) != 0)
+        {
+            printf("%s: Error retrieving file status after chmod\n", DstFilename);
+        }
+
         if (Verbose)
             printf("%s: Destination file permissions after chmod = 0x%X\n", DstFilename, dststat.st_mode);
     }
@@ -2260,9 +2273,10 @@ int32 GetStringFromMap(char *Result, ElfStrMap *Map, int32 Key)
 
 int32 GetTblDefInfo(void)
 {
-    int32  Status      = SUCCESS;
-    uint32 SeekOffset  = 0;
-    int32  NumDefsRead = 0;
+    int32    Status      = SUCCESS;
+    uint32   SeekOffset  = 0;
+    int32    NumDefsRead = 0;
+    uint64_t calculated_offset;
 
     /* Read the data to be used to format the CFE File and Table Headers */
     if ((get_st_size(SymbolPtrs[TblDefSymbolIndex]) != sizeof(CFE_TBL_FileDef_t)) &&
@@ -2275,8 +2289,8 @@ int32 GetTblDefInfo(void)
     else
     {
         /* fseek expects a long int, sh_offset and st_value are uint64 for elf64 */
-        uint64_t calculated_offset = get_sh_offset(SectionHeaderPtrs[get_st_shndx(SymbolPtrs[TblDefSymbolIndex])]) +
-                                     get_st_value(SymbolPtrs[TblDefSymbolIndex]);
+        calculated_offset = get_sh_offset(SectionHeaderPtrs[get_st_shndx(SymbolPtrs[TblDefSymbolIndex])]) +
+                            get_st_value(SymbolPtrs[TblDefSymbolIndex]);
         SeekOffset = (uint32_t)(calculated_offset);
         if (SeekOffset != calculated_offset)
         {
@@ -2331,11 +2345,12 @@ int32 GetTblDefInfo(void)
 
 int32 LocateAndReadUserObject(void)
 {
-    int32  Status     = SUCCESS;
-    int32  i          = 0;
-    int32  j          = 0;
-    uint32 SeekOffset = 0;
-    uint8  AByte;
+    int32    Status     = SUCCESS;
+    int32    i          = 0;
+    int32    j          = 0;
+    uint32   SeekOffset = 0;
+    uint8    AByte;
+    uint64_t calculated_offset;
 
     /* Search the symbol table for the user defined object */
     if (Verbose)
@@ -2428,9 +2443,8 @@ int32 LocateAndReadUserObject(void)
         else
         {
             /* Locate data associated with symbol */
-            uint64_t calculated_offset =
-                get_sh_offset(SectionHeaderPtrs[get_st_shndx(SymbolPtrs[UserObjSymbolIndex])]) +
-                get_st_value(SymbolPtrs[UserObjSymbolIndex]);
+            calculated_offset = get_sh_offset(SectionHeaderPtrs[get_st_shndx(SymbolPtrs[UserObjSymbolIndex])]) +
+                                get_st_value(SymbolPtrs[UserObjSymbolIndex]);
             SeekOffset = (uint32_t)(calculated_offset);
             if (SeekOffset != calculated_offset)
             {

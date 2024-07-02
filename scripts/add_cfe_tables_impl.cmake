@@ -32,8 +32,24 @@ function(do_add_cfe_tables_impl TABLE_FQNAME)
     set(TABLE_GENSCRIPT "${CFS_TABLETOOL_SCRIPT_DIR}/generate_elf_table_rules.cmake")
     set(TABLE_LIBNAME   "tblobj_${ADDTBL_ARG_TARGET_NAME}_${TABLE_FQNAME}")
 
+    # determine processor ID and spacecraft ID to use for table.
+    # If these are not defined, pass 0 instead of a blank (elf2cfetbl will error on non-integer)
+    if (DEFINED ${ADDTBL_ARG_TARGET_NAME}_PROCESSORID)
+        set(TABLE_PRID ${${ADDTBL_ARG_TARGET_NAME}_PROCESSORID})
+    else()
+        set(TABLE_PRID 0)
+    endif()
+
+    if (DEFINED SPACECRAFT_ID)
+        set(TABLE_SCID ${SPACECRAFT_ID})
+    else()
+        set(TABLE_SCID 0)
+    endif()
+
     set(TABLE_CMD_OPTS
       -DTEMPLATE_FILE="${TEMPLATE_FILE}"
+      -DTARGET_SCID="${TABLE_SCID}"
+      -DTARGET_PRID="${TABLE_PRID}"
       -DAPP_NAME="${ADDTBL_ARG_APP_NAME}"
       -DTARGET_NAME="${ADDTBL_ARG_TARGET_NAME}"
       -DARCHIVE_FILE="\"$<TARGET_FILE:${TABLE_LIBNAME}>\""
