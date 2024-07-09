@@ -1899,7 +1899,6 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
     uint64_t calculated_offset = SymbolTableDataOffset + (SymbolIndex * SymbolTableEntrySize);
     int32_t  SeekOffset        = (int32_t)calculated_offset;
     char     VerboseStr[60];
-    int32    i = 0;
 
     memset(VerboseStr, 0, sizeof(VerboseStr));
 
@@ -1945,14 +1944,11 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
         printf("   st_name  = 0x%08x - ", get_st_name(Symbol));
     fseek(SrcFileDesc, SeekOffset, SEEK_SET);
 
-    while ((i < sizeof(VerboseStr)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
-    {
-        i++;
-    }
+    /* Ensure null terminated */
+    VerboseStr[sizeof(VerboseStr) - 1] = '\0';
 
-    VerboseStr[i] = '\0'; /* Just in case i=sizeof(VerboseStr) */
+    SymbolNames[SymbolIndex] = malloc(strlen(VerboseStr) + 1);
 
-    SymbolNames[SymbolIndex] = malloc(i + 1);
     strcpy(SymbolNames[SymbolIndex], VerboseStr);
 
     if ((strcmp(VerboseStr, TBL_DEF_SYMBOL_NAME) == 0) || (strcmp(&VerboseStr[1], TBL_DEF_SYMBOL_NAME) == 0))
