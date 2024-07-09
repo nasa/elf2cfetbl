@@ -2545,13 +2545,13 @@ int32 OutputDataToTargetFile()
 
     if (EnableTimeTagInHeader)
     {
-        FileHeader.TimeSeconds    = SrcFileTimeInScEpoch;
-        FileHeader.TimeSubSeconds = 0;
+        FileHeader.FileCreateTime.Seconds    = SrcFileTimeInScEpoch;
+        FileHeader.FileCreateTime.Subseconds = 0;
     }
     else
     {
-        FileHeader.TimeSeconds    = 0;
-        FileHeader.TimeSubSeconds = 0;
+        FileHeader.FileCreateTime.Seconds    = 0;
+        FileHeader.FileCreateTime.Subseconds = 0;
     }
 
     memset(FileHeader.Description, 0, CFE_FS_HDR_DESC_MAX_LEN);
@@ -2576,8 +2576,8 @@ int32 OutputDataToTargetFile()
         SwapUInt32(&FileHeader.SpacecraftID);
         SwapUInt32(&FileHeader.ProcessorID);
         SwapUInt32(&FileHeader.ApplicationID);
-        SwapUInt32(&FileHeader.TimeSeconds);
-        SwapUInt32(&FileHeader.TimeSubSeconds);
+        SwapUInt32(&FileHeader.FileCreateTime.Seconds);
+        SwapUInt32(&FileHeader.FileCreateTime.Subseconds);
     }
 
     /* Create the standard cFE Table Header */
@@ -2614,8 +2614,8 @@ int32 OutputDataToTargetFile()
     fwrite(&FileHeader.SpacecraftID, sizeof(uint32), 1, DstFileDesc);
     fwrite(&FileHeader.ProcessorID, sizeof(uint32), 1, DstFileDesc);
     fwrite(&FileHeader.ApplicationID, sizeof(uint32), 1, DstFileDesc);
-    fwrite(&FileHeader.TimeSeconds, sizeof(uint32), 1, DstFileDesc);
-    fwrite(&FileHeader.TimeSubSeconds, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.FileCreateTime.Seconds, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.FileCreateTime.Subseconds, sizeof(uint32), 1, DstFileDesc);
     fwrite(&FileHeader.Description[0], sizeof(FileHeader.Description), 1, DstFileDesc);
 
     fwrite(&TableHeader.Reserved, sizeof(uint32), 1, DstFileDesc);
