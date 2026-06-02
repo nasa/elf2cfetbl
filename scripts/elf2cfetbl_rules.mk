@@ -7,4 +7,4 @@
 # into a separate dir, in case of similarly-named files on different cpus.
 elf/%:
 	@mkdir -pv "$(dir $(@))"
-	cd "$(dir $(@))" && $(AR) x "$(<)" "$(notdir $(@))"
+	cd "$(dir $(@))" && $(ARCH_AR) x "$(<)" "$(notdir $(@))"
