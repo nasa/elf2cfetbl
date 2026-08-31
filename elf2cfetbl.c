@@ -1777,10 +1777,12 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
             printf("   sh_name       = 0x%08x - ", get_sh_name(SectionHeader));
         fseek(SrcFileDesc, SeekOffset, SEEK_SET);
 
-        while ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0')
+        while ((i < (sizeof(VerboseStr) - 1)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
         {
             i++;
         }
+
+        VerboseStr[i] = '\0'; /* fgetc returns EOF as 0xff, so the loop needs its own bound */
         if (Verbose)
             printf("%s\n", VerboseStr);
 
@@ -1968,12 +1970,12 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
         printf("   st_name  = 0x%08x - ", get_st_name(Symbol));
     fseek(SrcFileDesc, SeekOffset, SEEK_SET);
 
-    while ((i < sizeof(VerboseStr)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
+    while ((i < (sizeof(VerboseStr) - 1)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
     {
         i++;
     }
 
-    VerboseStr[i] = '\0'; /* Just in case i=sizeof(VerboseStr) */
+    VerboseStr[i] = '\0'; /* Leave room for this, i can reach sizeof(VerboseStr) - 1 */
 
     SymbolNames[SymbolIndex] = malloc(i + 1);
     strcpy(SymbolNames[SymbolIndex], VerboseStr);
