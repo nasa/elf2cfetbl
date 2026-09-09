@@ -1389,17 +1389,30 @@ int32 GetSrcFilename(void)
 
 int32 GetDstFilename(void)
 {
-    int32 Status = SUCCESS;
+    int32  Status     = SUCCESS;
+    size_t DstPathLen = 0;
+    size_t TgtFileLen = 0;
 
     if (strlen(DstFilename) == 0)
     {
         strcpy(DstFilename, "./");
     }
 
-    strcat(DstFilename, TblFileDef.TgtFilename);
+    DstPathLen = strlen(DstFilename);
+    TgtFileLen = strlen(TblFileDef.TgtFilename);
 
-    if (Verbose)
-        printf("Target Filename: %s\n", DstFilename);
+    if (TgtFileLen > (sizeof(DstFilename) - DstPathLen - 1))
+    {
+        printf("Error! Destination path and target filename exceed maximum path length.\n");
+        Status = FAILED;
+    }
+    else
+    {
+        memcpy(&DstFilename[DstPathLen], TblFileDef.TgtFilename, TgtFileLen + 1);
+
+        if (Verbose)
+            printf("Target Filename: %s\n", DstFilename);
+    }
 
     return Status;
 }
