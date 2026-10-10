@@ -1777,10 +1777,22 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
             printf("   sh_name       = 0x%08x - ", get_sh_name(SectionHeader));
         fseek(SrcFileDesc, SeekOffset, SEEK_SET);
 
-        while ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0')
+        while (i < (sizeof(VerboseStr) - 1))
         {
+            /* fgetc returns an int, and EOF stored into a char is not '\0', so test
+             * before storing or a truncated string table fills the buffer with 0xff */
+            int NameChar = fgetc(SrcFileDesc);
+
+            if ((NameChar == EOF) || (NameChar == '\0'))
+            {
+                break;
+            }
+
+            VerboseStr[i] = (char)NameChar;
             i++;
         }
+
+        VerboseStr[i] = '\0';
         if (Verbose)
             printf("%s\n", VerboseStr);
 
@@ -1968,12 +1980,21 @@ int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
         printf("   st_name  = 0x%08x - ", get_st_name(Symbol));
     fseek(SrcFileDesc, SeekOffset, SEEK_SET);
 
-    while ((i < sizeof(VerboseStr)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
+    while (i < (sizeof(VerboseStr) - 1))
     {
+        /* As in GetSectionHeader: read into an int so EOF is not stored as 0xff */
+        int NameChar = fgetc(SrcFileDesc);
+
+        if ((NameChar == EOF) || (NameChar == '\0'))
+        {
+            break;
+        }
+
+        VerboseStr[i] = (char)NameChar;
         i++;
     }
 
-    VerboseStr[i] = '\0'; /* Just in case i=sizeof(VerboseStr) */
+    VerboseStr[i] = '\0';
 
     SymbolNames[SymbolIndex] = malloc(i + 1);
     strcpy(SymbolNames[SymbolIndex], VerboseStr);
