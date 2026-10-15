@@ -28,7 +28,7 @@
 /*
  * Development Build Macro Definitions
  */
-#define ELF2CFETBL_BUILD_NUMBER    0        /*!< @brief Number of commits since baseline */
+#define ELF2CFETBL_BUILD_NUMBER    1        /*!< @brief Number of commits since baseline */
 #define ELF2CFETBL_BUILD_BASELINE  "v7.0.1" /*!< @brief Development Build: git tag that is the base for the current */
 #define ELF2CFETBL_BUILD_DEV_CYCLE "v7.0.1" /**< @brief Development: Release name for current development cycle */
 #define ELF2CFETBL_BUILD_CODENAME  "Draco"  /**< @brief: Development: Code name for the current build */
@@ -52,7 +52,7 @@
  * Values 1-254 are reserved for mission use to denote patches/customizations as needed. NOTE: Reserving 0 and 0xFF for
  * cFS open-source development use (pending resolution of nasa/cFS#440)
  */
-#define ELF2CFETBL_MISSION_REV 0x0
+#define ELF2CFETBL_MISSION_REV 0xFF
 
 /*
  * Tools to construct version string
