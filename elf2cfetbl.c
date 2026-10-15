@@ -1777,10 +1777,11 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
             printf("   sh_name       = 0x%08x - ", get_sh_name(SectionHeader));
         fseek(SrcFileDesc, SeekOffset, SEEK_SET);
 
-        while ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0')
+        while ((i < sizeof(VerboseStr)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
         {
             i++;
         }
+        VerboseStr[i % sizeof(VerboseStr)] = '\0'; /* nul-terminate; see the GetSymbol() loop for the same fix shape */
         if (Verbose)
             printf("%s\n", VerboseStr);
 
