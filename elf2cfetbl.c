@@ -1720,7 +1720,7 @@ int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
 {
     int32  Status      = SUCCESS;
     size_t NumHdrsRead = 0;
-    char   VerboseStr[60];
+    char   VerboseStr[MAX_SECTION_HDR_NAME_LEN];
     int64  SeekOffset;
     int32  Shentsize;
     int32  i = 0;
