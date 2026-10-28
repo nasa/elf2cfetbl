@@ -115,6 +115,7 @@ function(do_add_cfe_tables_impl TABLE_FQNAME)
                 -DTABLE_NAME="${TABLE_BASENAME}"
                 -DSOURCES="${TBL_SRC}"
                 -DOBJEXT="${CMAKE_C_OUTPUT_EXTENSION}"
+                -DARCH_AR="${CMAKE_AR}"
                 -P "${TABLE_GENSCRIPT}"
             WORKING_DIRECTORY
                 ${MISSION_BINARY_DIR}/tables
